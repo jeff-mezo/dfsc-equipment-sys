@@ -2,6 +2,9 @@ import React from 'react'
 import Link from 'next/link'
 import Image from "next/image"
 import UpLogo from '@/public/upLogo.png'
+import { Sheet, SheetTrigger, SheetContent }  from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
+import { MenuIcon } from 'lucide-react'
 
 const Header = () => {
   return (
@@ -11,6 +14,32 @@ const Header = () => {
                 className="w-12"/>
             <h1>DFSC Equipment Reservation System</h1>  
         </Link>
+        <nav className="hidden md:flex gap-6 text-sm font-medium ">
+            <Link className="hover:underline underline-offset-4" href="#">
+                jamze@up.edu.ph
+            </Link>
+            <Link className="hover:underline underline-offset-4" href="#">
+                Log Out
+            </Link>
+        </nav>
+        <Sheet>
+            <SheetTrigger asChild>
+                <Button className="md:hidden" size="icon" variant="outline">
+                    <MenuIcon />
+                    <span className="sr-only">Toggle navigation menu</span>
+                </Button>
+            </SheetTrigger>
+                <SheetContent side="right">
+                    <div className="grid gap-4 p-4">
+                        <Link className="hover:underline underline-offset-4" href="#">
+                            jamze@up.edu.ph
+                        </Link>
+                        <Link className="hover:underline underline-offset-4" href="#">
+                            Log Out
+                        </Link>
+                    </div>
+                </SheetContent>
+        </Sheet>
         {/* <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
             <Link className="hover:underline underline-offset-4" href="#">
             Home
@@ -25,12 +54,12 @@ const Header = () => {
             Contact
             </Link>
         </nav> */}
-        {/* <Sheet>
+    {/* <Sheet>
             <SheetTrigger asChild>
-            <Button className="md:hidden" size="icon" variant="outline">
-                <MenuIcon />
-                <span className="sr-only">Toggle navigation menu</span>
-            </Button>
+                <Button className="md:hidden" size="icon" variant="outline">
+                    <MenuIcon />
+                    <span className="sr-only">Toggle navigation menu</span>
+                </Button>
             </SheetTrigger>
                 <SheetContent side="right">
                     <div className="grid gap-4 p-4">

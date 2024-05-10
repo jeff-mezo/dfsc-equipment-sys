@@ -10,7 +10,7 @@ const Login = () => {
   return (
     <main>
     {/* NAVBAR */}
-    <Header />
+    
 
     {/* LOGIN CARD */}
     <div className="flex flex-col items-center justify-center min-h-screen px-4 py-8 bg-gray-100">

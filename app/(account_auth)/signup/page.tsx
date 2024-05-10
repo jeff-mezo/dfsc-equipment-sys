@@ -14,8 +14,9 @@ export default function SignUp() {
           <h1 className="text-2xl font-bold text-center">Signup</h1>
           <form className="space-y-4">
             <Input id="name" placeholder="Name" />
-            <div className="grid grid-cols-2 gap-4">
-              <Input id="student-no" placeholder="Student No." type="number" />
+            <Input id="email" placeholder="Email" type="email" />
+            <div className="">{/*  grid grid-cols-2 gap-4 */}
+            {/*   <Input id="student-no" placeholder="Student No." type="number" />
               <Select>
                 <SelectTrigger id="year-level">
                   <SelectValue placeholder="Year Level" />
@@ -27,9 +28,8 @@ export default function SignUp() {
                   <SelectItem value="senior">Senior</SelectItem>
                   <SelectItem value="graduate">Graduate</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
             </div>
-            <Input id="email" placeholder="Email" type="email" />
             <Input id="contact-no" placeholder="Contact No." type="number" />
             <Input id="password" placeholder="Password" type="password" />
             <Input id="confirm-password" placeholder="Confirm Password" type="password" />
@@ -40,6 +40,11 @@ export default function SignUp() {
               Already have an account? {" "}
               <Link className="text up-text-red" href="login">
                 Login
+              </Link>
+            </p>
+            <p className="text-sm">
+              <Link className="text up-text-red \" href="login">
+                Become an Admin
               </Link>
             </p>
           </div>
