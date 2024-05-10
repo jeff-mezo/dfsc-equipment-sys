@@ -2,13 +2,13 @@ import { Input } from "@/components/ui/input"
 import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import Header from "@/components/navbar"
+import Image from "next/image"
+import UpLogo from "@/public/upLogo.png"
+import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
 
 export default function SignUp() {
   return (
-    <main> 
-      <Header />
-   
+    <main>    
       <div className="flex flex-col items-center justify-center min-h-screen px-4 py-8 bg-gray-100">
         <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow">
           <h1 className="text-2xl font-bold text-center">Signup</h1>
