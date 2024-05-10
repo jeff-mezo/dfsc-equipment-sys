@@ -6,6 +6,7 @@ import Link from "next/link"
 import Image from "next/image"
 import UpLogo from "@/public/upLogo.png"
 import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
+import { login, signup } from './actions'
 
 
 
