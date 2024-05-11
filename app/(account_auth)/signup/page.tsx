@@ -5,6 +5,8 @@ import Link from "next/link"
 import Image from "next/image"
 import UpLogo from "@/public/upLogo.png"
 import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
+import { supabase } from '@/config/supabaseClient'
+import { login, signup } from './actions'
 
 export default function SignUp() {
   return (
@@ -33,7 +35,7 @@ export default function SignUp() {
             <Input id="contact-no" placeholder="Contact No." type="number" />
             <Input id="password" placeholder="Password" type="password" />
             <Input id="confirm-password" placeholder="Confirm Password" type="password" />
-            <Button className="w-full up-primary-red">Signup</Button>
+            <Button className="w-full up-primary-red" formAction={signup} >Signup</Button>
           </form>
           <div className="text-center">
             <p className="text-sm">
@@ -75,6 +77,14 @@ function MenuIcon() {
         <line x1="4" x2="20" y1="18" y2="18" />
         </svg>
 )}
+
+async function signUpNewUser() {
+  const { data, error } = await supabase.auth.signUp({
+    email: 'example@email.com',
+    password: 'example-password',
+    
+  })
+}
 
 
   
