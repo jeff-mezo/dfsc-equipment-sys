@@ -1,3 +1,4 @@
+'use client';
 import { Input } from "@/components/ui/input"
 import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
@@ -7,6 +8,9 @@ import UpLogo from "@/public/upLogo.png"
 import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
 import { supabase } from '@/config/supabaseClient'
 import { login, signup } from './actions'
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useState } from "react";
+
 
 export default function SignUp() {
   return (
@@ -15,8 +19,8 @@ export default function SignUp() {
         <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow">
           <h1 className="text-2xl font-bold text-center">Signup</h1>
           <form className="space-y-4">
-            <Input id="name" placeholder="Name" />
-            <Input id="email" placeholder="Email" type="email" />
+            <Input id="name" name="name" placeholder="Name" />
+            <Input id="email" name="email" placeholder="Email" type="email" />
             <div className="">{/*  grid grid-cols-2 gap-4 */}
             {/*   <Input id="student-no" placeholder="Student No." type="number" />
               <Select>
@@ -32,9 +36,9 @@ export default function SignUp() {
                 </SelectContent>
               </Select> */}
             </div>
-            <Input id="contact-no" placeholder="Contact No." type="number" />
-            <Input id="password" placeholder="Password" type="password" />
-            <Input id="confirm-password" placeholder="Confirm Password" type="password" />
+            <Input id="contact-no" name="contactNo" placeholder="Contact No." type="number" />
+            <Input id="password" name="password" placeholder="Password" type="password" />
+            <Input id="confirm-password" name="confPasswrod" placeholder="Confirm Password" type="password" />
             <Button className="w-full up-primary-red" formAction={signup} >Signup</Button>
           </form>
           <div className="text-center">
@@ -78,14 +82,14 @@ function MenuIcon() {
         </svg>
 )}
 
-async function signUpNewUser() {
+/* async function signUpNewUser() {
   const { data, error } = await supabase.auth.signUp({
     email: 'example@email.com',
     password: 'example-password',
     
   })
 }
-
+*/
 
   
   

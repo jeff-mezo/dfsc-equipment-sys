@@ -20,14 +20,14 @@ const Login = () => {
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow">
         <h1 className="text-2xl font-bold text-center">Login</h1>
         <form className="space-y-4">
-          <Input id="email" placeholder="Email" type='email' />
-          <Input id="password" placeholder="Password" type="password" />
+          <Input id="email" name="email" placeholder="Email" type='email' />
+          <Input id="password" name="password" placeholder="Password" type="password" />
           <div>
             <Link className="text text-sm up-text-red" href="#">
               Forgot Password
             </Link>
           </div>
-          <Button className="w-full up-primary-red">Login</Button>
+          <Button className="w-full up-primary-red" formAction={login}>Login</Button>
         </form>
         <div className="text-center">
           <p className="text-sm">
