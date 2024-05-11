@@ -8,6 +8,7 @@ interface PostProps {
   eqName: string;
   eqDesc: string;
   eqStock: number;
+  eqId: number;
 }
 
 const EquipmentCard : React.FC<PostProps> = ({
@@ -15,6 +16,7 @@ const EquipmentCard : React.FC<PostProps> = ({
   eqName,
   eqDesc,
   eqStock,
+  eqId,
 }) => {
   
   // let isDisabled = 0;

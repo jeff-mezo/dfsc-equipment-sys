@@ -75,11 +75,11 @@ const Dashboard = () => {
             </Select>
           </div>
           <div className='flex flex-row'>
-            <Button variant='outline'>
+            <Button variant='outline' id='viewCart'>
               <ShoppingCart className="mr-2 h- w-4" /> View Cart
             </Button>
             <span className="md:px-1"></span>
-            <Button className='up-primary-red'>
+            <Button className='up-primary-red' id='reserve'>
               Reserve Equipment
             </Button>
           </div>
@@ -95,6 +95,7 @@ const Dashboard = () => {
                   eqDesc={equipmentItem.description}
                   eqImg={equipmentItem.img}
                   eqStock={equipmentItem.stock}
+                  eqId={equipmentItem.id}
                 />
               ))
             
