@@ -9,7 +9,8 @@ import React from 'react'
 
 import { useEffect, useState } from 'react'
 
-type Equipment = {
+interface Equipment {
+  id: number;
   name: string;
   description: string;
   img: string;
@@ -23,9 +24,7 @@ const Dashboard = () => {
   
   useEffect(() => {
     const fetchEquipment = async () => {
-      const { data, error } = await supabase
-        .from('equipments')
-        .select()
+      const { data, error } = await supabase.from('equipments').select()
 
         if (error) {
           setFetchError(error.message);
@@ -36,8 +35,6 @@ const Dashboard = () => {
     };
     
     fetchEquipment();
-
-
   }, [])
 
   return (
@@ -88,16 +85,6 @@ const Dashboard = () => {
           </div>
 
         </div>
-
-          <EquipmentCard 
-            eqName='Microscope'
-            eqDesc='test description test desc'
-            eqImg='https://cdn.britannica.com/50/114750-050-06EEB5F0/compound-microscope.jpg'
-            eqStock={8}
-          /> 
-
-          
-          
 
           {fetchError ? (
               <div>Error fetching equipment: {fetchError}</div>
