@@ -1,7 +1,7 @@
 'use client'
 
 import EquipmentCard from '@/components/equipment'
-import supabase from '@/config/supabaseClient'
+import { supabase } from '@/config/supabaseClient'
 import { Button } from '@/components/ui/button'
 import { ShoppingCart } from 'lucide-react'
 import { Select, SelectTrigger, SelectValue, SelectGroup, SelectContent, SelectItem, SelectLabel } from '@/components/ui/select'
