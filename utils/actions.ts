@@ -5,8 +5,8 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { supabase } from '@/config/supabaseClient'
 import { NextApiRequest, NextApiResponse } from 'next';
-import { useRouter } from 'next/navigation'
- 
+
+
 interface data {
   email: string;
   password: string;
@@ -17,6 +17,7 @@ interface data {
 
 
 export async function login(formData: FormData) {
+  let redirectPath: string | null = null
   const loginData = {
     emailData: formData.get('email') as string,
     passwordData: formData.get('password') as string,
@@ -36,14 +37,20 @@ export async function login(formData: FormData) {
   
     if (data.length > 0) {
       console.log('Data exists and matches the user input.')
-
-
+      redirectPath = '/account'
     } else {
       console.log('No matching data found.')
     }
+
   } catch (err) {
     console.log('UnexpectedError: ', err)
   }
+    finally {
+      if (redirectPath)
+        redirect(redirectPath)
+  }
+
+
 }
 
 
@@ -68,7 +75,7 @@ export async function login(formData: FormData) {
 
 
 export async function signup(formData: FormData) {
-
+  let redirectPath: string | null = null
   const userData: data = { 
     email: formData.get('email') as string,
     name: formData.get('name') as string,
@@ -88,11 +95,16 @@ export async function signup(formData: FormData) {
     }
 
     console.log('User data sent successfully:', data);
+    redirectPath = '/account'
 
     // Handle successful submission (e.g., clear form, show success message)
   } catch (err) {
     console.error('Unexpected error:', err);
+  } finally {
+    if (redirectPath)
+      redirect(redirectPath)
   }
+  
 
 }
 

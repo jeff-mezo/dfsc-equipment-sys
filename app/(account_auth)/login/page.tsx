@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Header from "@/components/navbar"
 import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
-import { login, signup } from './actions'
+import { login, signup } from '../../../utils/actions'
 
 
 
