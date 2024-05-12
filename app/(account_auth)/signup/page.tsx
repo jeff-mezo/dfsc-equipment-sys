@@ -39,6 +39,7 @@ export default function SignUp() {
             <Input id="contact-no" name="contactNo" placeholder="Contact No." type="number" />
             <Input id="password" name="password" placeholder="Password" type="password" />
             <Input id="confirm-password" name="confPasswrod" placeholder="Confirm Password" type="password" />
+            <Input id="isadmin" name="isadmin" className="hidden" type="number" value={0}/>
             <Button className="w-full up-primary-red" formAction={signup} >Signup</Button>
           </form>
           <div className="text-center">
