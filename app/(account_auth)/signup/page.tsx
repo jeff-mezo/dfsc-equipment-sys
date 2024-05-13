@@ -7,7 +7,7 @@ import Image from "next/image"
 import UpLogo from "@/public/upLogo.png"
 import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
 import { supabase } from '@/config/supabaseClient'
-import { login, signup } from './actions'
+import { login, signup } from '@/utils/actions'
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
 
