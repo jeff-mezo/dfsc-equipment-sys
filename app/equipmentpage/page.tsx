@@ -3,11 +3,21 @@
 import EquipmentCard from '@/components/equipment'
 import { supabase } from '@/config/supabaseClient'
 import { Button } from '@/components/ui/button'
-import { ShoppingCart } from 'lucide-react'
 import { Select, SelectTrigger, SelectValue, SelectGroup, SelectContent, SelectItem, SelectLabel } from '@/components/ui/select'
 import React from 'react'
 
 import { useEffect, useState } from 'react'
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { ShoppingCart } from 'lucide-react'
+
 
 interface Equipment {
   id: number;
@@ -16,6 +26,12 @@ interface Equipment {
   img: string;
   stock: number;
 }
+
+// interface CartItem {
+//   id: number;
+//   name: string;
+//   quantity: number;
+// }
 
 const Dashboard = () => {
 
@@ -36,6 +52,8 @@ const Dashboard = () => {
     
     fetchEquipment();
   }, [])
+
+  
 
   return (
     <div className='pt-20'>
@@ -75,9 +93,47 @@ const Dashboard = () => {
             </Select>
           </div>
           <div className='flex flex-row'>
-            <Button variant='outline' id='viewCart'>
-              <ShoppingCart className="mr-2 h- w-4" /> View Cart
-            </Button>
+
+            {/* CART DIALOG: */}
+          <Dialog> 
+            <DialogTrigger asChild>
+                <Button variant='outline' id='viewCart'>
+                <ShoppingCart className="mr-2 h- w-4" /> View Cart
+                </Button>
+            </DialogTrigger>
+
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                <DialogTitle>Equipment Cart</DialogTitle>
+                </DialogHeader>
+
+                {/* CART ITEMS vvv */}
+                {   
+                    equipment && equipment.map(equipmentItem => (     
+                        <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-[auto_1fr] items-center gap-4">
+                                <img
+                                alt="item"
+                                className="aspect-square rounded-md object-cover"
+                                height={64}
+                                src={ equipmentItem.img }
+                                width={64}
+                                />
+                                <div className="space-y-1">
+                                <p className="font-medium">{ equipmentItem.name }</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Quantity: { equipmentItem.stock }</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                }
+
+                <Button className='up-primary-red'>Continue Reservation</Button>
+            </DialogContent>
+        </Dialog>
+
+
+
             <span className="md:px-1"></span>
             <Button className='up-primary-red' id='reserve'>
               Reserve Equipment

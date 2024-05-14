@@ -21,7 +21,7 @@ export async function login(formData: FormData) {
   const loginData = {
     emailData: formData.get('email') as string,
     passwordData: formData.get('password') as string,
-  }
+}
 
   try {
     const { data, error } = await supabase
@@ -37,7 +37,7 @@ export async function login(formData: FormData) {
   
     if (data.length > 0) {
       console.log('Data exists and matches the user input.')
-      redirectPath = '/account'
+      redirectPath = '/equipmentpage'
     } else {
       console.log('No matching data found.')
     }

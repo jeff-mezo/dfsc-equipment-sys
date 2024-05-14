@@ -11,31 +11,64 @@ interface PostProps {
   eqId: number;
 }
 
+// interface CartItem {
+//   product: PostProps;
+//   quantity: number;
+// }
+
 const EquipmentCard : React.FC<PostProps> = ({
   eqImg,
   eqName,
   eqDesc,
   eqStock,
-  eqId,
+  eqId, // Unique Identifier for Equipment
 }) => {
-  
-  // let isDisabled = 0;
-
-  // if (eqStock == 0) {
-  //   isDisabled = 1;
-  // } else if (eqStock <= 5) {
-  //   isDisabled = 2;
-  // }
 
   const [currentQuantity, setCurrentQuantity] = React.useState(0);
 
   const handleIncrement = () => {
     setCurrentQuantity(Math.min(currentQuantity + 1, eqStock));
+    // ADD TO CART SHI:
+    // const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]') as CartItem[];
+    // const existingItem = cartItems.find(item => item.product.eqId === eqId);
+
+    // if(existingItem) {
+    //   existingItem.quantity += currentQuantity;
+    // } else {
+    //   cartItems.push({product: {eqId, eqName, eqDesc, eqImg, eqStock}, quantity: currentQuantity});
+    // }
+
+    // localStorage.setItem('cartItems', JSON.stringify(cartItems));
   };
 
   const handleDecrement = () => {
     setCurrentQuantity(Math.max(currentQuantity - 1, 0)); // Prevent negative quantity
+    // ADD TO CART SHI:
+    // const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]') as CartItem[];
+    // const existingItem = cartItems.find(item => item.product.eqId === eqId)!;
+
+    // if(existingItem) {
+    //   existingItem.quantity -= 1;
+    // } else {
+    //   cartItems.splice(cartItems.indexOf(existingItem), 1);
+    // }
+
+    // localStorage.setItem('cartItems', JSON.stringify(cartItems));
   };
+
+  // ATTEMPT NAKO SA PAG ADD TO CART:
+  // const addToCart = () => { 
+  //   const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]') as CartItem[];
+  //   const existingItem = cartItems.find(item => item.product.eqId === eqId);
+
+  //   if(existingItem) {
+  //     existingItem.quantity += currentQuantity;
+  //   } else {
+  //     cartItems.push({product: {eqId, eqName, eqDesc, eqImg, eqStock}, quantity: currentQuantity});
+  //   }
+
+  //   localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  // }
 
   return (
       <div className="mx-5 my-5 max-w-[300px] bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-lg flex-grow">
