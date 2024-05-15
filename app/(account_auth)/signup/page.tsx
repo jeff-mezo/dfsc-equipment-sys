@@ -12,6 +12,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
 
 
+
 export default function SignUp() {
   return (
     <main>    
@@ -92,7 +93,23 @@ function MenuIcon() {
 }
 */
 
+/*
+const signInWithGoogle = () =>
+{
+  const supabase = createClient();
+  const { data, error } = supabase.auth.signInWithOAuth({ 
+    provider: 'google',
+    options: {
+      redirectTo: 'http://localhost:3000/dashboard',
+      queryParams: {
+        access_type: "offline",
+        prompt: "consent",
+      }
+    } });
+}
   
+*/
+
   
   function MountainIcon() {
     return (
