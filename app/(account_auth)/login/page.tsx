@@ -1,3 +1,4 @@
+'use client';
 import React from 'react'
 import { Input } from "@/components/ui/input"
 import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
@@ -6,8 +7,24 @@ import Link from "next/link"
 import Header from "@/components/navbar"
 import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
 import { login, signup } from '../../../utils/actions'
+import { createClient } from '@/utils/supabase/client'
 
+const signInWithGoogle = () =>
+  {
+    const supabase = createClient();
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
+    })
+    
+  }
 
+  
 
 const Login = () => {
   return (
@@ -35,6 +52,10 @@ const Login = () => {
             <Link className="text up-text-red" href="signup">
               Signup
             </Link>
+          </p>
+          <p className="text-sm">
+          Signin with Google {" "}
+          <Button className="w-full up-primary-red" onClick= {signInWithGoogle} >Signin with Google</Button>
           </p>
         </div>
       </div>

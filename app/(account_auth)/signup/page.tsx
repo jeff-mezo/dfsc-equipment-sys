@@ -10,8 +10,22 @@ import { supabase } from '@/config/supabaseClient'
 import { login, signup } from '@/utils/actions'
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
 
-
+const signInWithGoogle = () =>
+  {
+    const supabase = createClient();
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
+    })
+    
+  }
 
 export default function SignUp() {
   return (
@@ -45,10 +59,7 @@ export default function SignUp() {
           </form>
           <div className="text-center">
             <p className="text-sm">
-              Already have an account? {" "}
-              <Link className="text up-text-red" href="login">
-                Login
-              </Link>
+              <Button className="w-full up-primary-red" onClick= {signInWithGoogle} >Signup with Google</Button>
             </p>
             <p className="text-sm">
               <Link className="text up-text-red \" href="login">
@@ -93,22 +104,9 @@ function MenuIcon() {
 }
 */
 
-/*
-const signInWithGoogle = () =>
-{
-  const supabase = createClient();
-  const { data, error } = supabase.auth.signInWithOAuth({ 
-    provider: 'google',
-    options: {
-      redirectTo: 'http://localhost:3000/dashboard',
-      queryParams: {
-        access_type: "offline",
-        prompt: "consent",
-      }
-    } });
-}
-  
-*/
+
+
+
 
   
   function MountainIcon() {
