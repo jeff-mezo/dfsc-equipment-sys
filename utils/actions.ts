@@ -15,43 +15,54 @@ interface data {
   isadmin: number;
 }
 
-
-export async function login(formData: FormData) {
+export async function login() {
   let redirectPath: string | null = null
-  const loginData = {
-    emailData: formData.get('email') as string,
-    passwordData: formData.get('password') as string,
-}
-
   try {
-    const { data, error } = await supabase
-      .from('users')
-      .select('email, password')
-      .eq('email', loginData.emailData )
-      .eq('password', loginData.passwordData )
-    
-    if (error) {
-      console.log('Error: ', error)
-      return
-    }
-  
-    if (data.length > 0) {
-      console.log('Data exists and matches the user input.')
-      redirectPath = '/equipmentpage'
-    } else {
-      console.log('No matching data found.')
-    }
-
   } catch (err) {
     console.log('UnexpectedError: ', err)
+  } finally {
+    redirectPath = '/equipmentpage'
+    if (redirectPath) redirect(redirectPath)
   }
-    finally {
-      if (redirectPath)
-        redirect(redirectPath)
-  }
-
-
 }
+
+
+// export async function login(formData: FormData) {
+//   let redirectPath: string | null = null
+//   const loginData = {
+//     emailData: formData.get('email') as string,
+//     passwordData: formData.get('password') as string,
+// }
+
+//   try {
+//     const { data, error } = await supabase
+//       .from('users')
+//       .select('email, password')
+//       .eq('email', loginData.emailData )
+//       .eq('password', loginData.passwordData )
+    
+//     if (error) {
+//       console.log('Error: ', error)
+//       return
+//     }
+  
+//     if (data.length > 0) {
+//       console.log('Data exists and matches the user input.')
+//       redirectPath = '/equipmentpage'
+//     } else {
+//       console.log('No matching data found.')
+//     }
+
+//   } catch (err) {
+//     console.log('UnexpectedError: ', err)
+//   }
+//     finally {
+//       if (redirectPath)
+//         redirect(redirectPath)
+//   }
+
+
+// }
 
 
 

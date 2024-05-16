@@ -56,11 +56,12 @@ export default function SignUp() {
             <Input id="confirm-password" name="confPasswrod" placeholder="Confirm Password" type="password" />
             <Input id="isadmin" name="isadmin" className="hidden" type="number" value={0}/>
             <Button className="w-full up-primary-red" formAction={signup} >Signup</Button>
+            <Button className="w-full" variant={'outline'} onClick= {signInWithGoogle}>
+              <ChromeIcon className="mr-2 h-4 w-4" />
+              Signup with Google
+            </Button>
           </form>
           <div className="text-center">
-            <p className="text-sm">
-              <Button className="w-full up-primary-red" onClick= {signInWithGoogle} >Signup with Google</Button>
-            </p>
             <p className="text-sm">
               <Link className="text up-text-red \" href="login">
                 Become an Admin
@@ -109,20 +110,25 @@ function MenuIcon() {
 
 
   
-  function MountainIcon() {
-    return (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
-      </svg>
-    )
-  }
+function ChromeIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="4" />
+      <line x1="21.17" x2="12" y1="8" y2="8" />
+      <line x1="3.95" x2="8.54" y1="6.06" y2="14" />
+      <line x1="10.88" x2="15.46" y1="21.94" y2="14" />
+    </svg>
+  )
+}

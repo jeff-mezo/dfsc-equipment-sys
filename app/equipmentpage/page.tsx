@@ -152,6 +152,7 @@ const Dashboard = () => {
                   eqImg={equipmentItem.img}
                   eqStock={equipmentItem.stock}
                   eqId={equipmentItem.id}
+                  key={null}
                 />
               ))
             
