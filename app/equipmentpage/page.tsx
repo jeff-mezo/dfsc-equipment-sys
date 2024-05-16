@@ -109,8 +109,8 @@ const Dashboard = () => {
 
                 {/* CART ITEMS vvv */}
                 {   
-                    equipment && equipment.map(equipmentItem => (     
-                        <div className="grid gap-4 py-4">
+                    equipment && equipment.map((equipmentItem, index) => (     
+                        <div className="grid gap-4 py-4" key={index}>
                             <div className="grid grid-cols-[auto_1fr] items-center gap-4">
                                 <img
                                 alt="item"
@@ -152,7 +152,7 @@ const Dashboard = () => {
                   eqImg={equipmentItem.img}
                   eqStock={equipmentItem.stock}
                   eqId={equipmentItem.id}
-                  key={null}
+                  key={equipmentItem.id}
                 />
               ))
             
