@@ -20,6 +20,7 @@ const signInWithGoogle = () =>
           access_type: 'offline',
           prompt: 'consent',
         },
+        redirectTo: location.origin + "/auth/callback"
       },
     })
     

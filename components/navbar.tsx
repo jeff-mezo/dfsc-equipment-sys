@@ -5,9 +5,11 @@ import UpLogo from '@/public/upLogo.png'
 import { Sheet, SheetTrigger, SheetContent }  from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { MenuIcon } from 'lucide-react'
+import {  } from 'next-auth'
 
 const Header = () => {
   return (
+    
     <header className="absolute flex items-center justify-between h-16 w-screen px-4 md:px-6 bg-white dark:bg-gray-950 shadow">
         <Link className="flex items-center gap-2" href="#">
             <Image src={UpLogo} alt="UpLogo"
