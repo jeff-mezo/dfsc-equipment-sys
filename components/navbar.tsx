@@ -1,3 +1,4 @@
+"use client"
 import React from 'react'
 import Link from 'next/link'
 import Image from "next/image"
@@ -5,11 +6,17 @@ import UpLogo from '@/public/upLogo.png'
 import { Sheet, SheetTrigger, SheetContent }  from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { MenuIcon } from 'lucide-react'
-import {  } from 'next-auth'
+import useUser from '@/app/auth/hook/useUser'
 
 const Header = () => {
-  return (
+
+    const { isFetching, data } = useUser();
     
+    if(isFetching){
+        return <></>
+    }
+
+  return (
     <header className="absolute flex items-center justify-between h-16 w-screen px-4 md:px-6 bg-white dark:bg-gray-950 shadow">
         <Link className="flex items-center gap-2" href="#">
             <Image src={UpLogo} alt="UpLogo"
@@ -17,9 +24,10 @@ const Header = () => {
             <h1>DFSC Equipment Reservation System</h1>  
         </Link>
         <nav className="hidden md:flex gap-6 text-sm font-medium ">
-            <Link className="hover:underline underline-offset-4" href="#">
-                jamze@up.edu.ph
-            </Link>
+            {data?.id ? <Link className="hover:underline underline-offset-4" href="#">
+                {data.email}
+            </Link> : <></>}
+            
             <Link className="hover:underline underline-offset-4" href="#">
                 Log Out
             </Link>
