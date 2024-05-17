@@ -4,7 +4,7 @@ import React, { ReactNode, useState } from 'react'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 
-export default function ({children}:{children:ReactNode}) {
+export default function QueryProvider({children}:{children:ReactNode}) {
     const [queryClient] = useState(() => new QueryClient({
         defaultOptions: {
             queries: {
