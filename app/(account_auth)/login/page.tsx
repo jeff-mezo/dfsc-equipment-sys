@@ -9,22 +9,7 @@ import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
 import { login, signup } from '../../../utils/actions'
 import { createClient } from '@/utils/supabase/client'
 import { useSession } from '@supabase/auth-helpers-react'
-
-const signInWithGoogle = () =>
-  {
-    const supabase = createClient();
-    supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent',
-        },
-        redirectTo: location.origin + "/auth/callback"
-      },
-    })
-    
-  }
+import { signInWithGoogle } from "@/utils/supabase/google";
   
 
 const Login = () => {

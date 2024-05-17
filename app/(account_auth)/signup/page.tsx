@@ -22,6 +22,8 @@ const signInWithGoogle = () =>
           access_type: 'offline',
           prompt: 'consent',
         },
+        redirectTo: location.origin + "/auth/callback",
+        scopes: "openid, https://www.googleapis.com/auth/profile.agerange.read, https://www.googleapis.com/auth/user.birthday.read, https://www.googleapis.com/auth/user.gender.read, https://www.googleapis.com/auth/user.organization.read, https://www.googleapis.com/auth/user.phonenumbers.read, https://www.googleapis.com/auth/userinfo.profile",
       },
     })
     
