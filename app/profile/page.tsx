@@ -89,8 +89,7 @@ const profile = () => {
                                             <SelectContent>
                                                 <SelectItem value="student">Student</SelectItem>
                                                 <SelectItem value="faculty">Faculty</SelectItem>
-                                                <SelectItem value="intern">Intern</SelectItem>
-                                                <SelectItem value="admin">Admin</SelectItem>
+                                                <SelectItem value="intern">Student-Intern</SelectItem>  
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -136,7 +135,6 @@ const profile = () => {
                                             <SelectContent>
                                                 <SelectItem value="under">Undergraduate</SelectItem>
                                                 <SelectItem value="post">Postgraduate</SelectItem>
-                                                <SelectItem value="admin1">Admin</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
