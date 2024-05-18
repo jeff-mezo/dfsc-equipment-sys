@@ -4,7 +4,7 @@ import Image from "next/image";
 import { login } from '@/utils/actions'
 import { supabase } from "@/config/supabaseClient";
 import { useRouter } from "next/router";
-//import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface session {
   user?: {  // Make user optional
