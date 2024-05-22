@@ -7,13 +7,27 @@ import { Sheet, SheetTrigger, SheetContent }  from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { MenuIcon } from 'lucide-react'
 import useUser from '@/app/hook/useUser'
+import { SupabaseClient } from '@supabase/supabase-js'
+import { createClient } from '@/utils/supabase/client'
+import { useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
+import { login } from '@/utils/actions'
 
 const Header = () => {
 
     const { isFetching, data } = useUser();
+    const queryClient = useQueryClient();
+    const router = useRouter();
     
     if(isFetching){
         return <></>
+    }
+
+    const handleLogout = async () => {
+        const supabase = createClient();
+        queryClient.clear();
+        await supabase.auth.signOut();
+        router.refresh();
     }
 
   return (
@@ -28,9 +42,15 @@ const Header = () => {
                 {data.email}
             </Link> : <></>}
             
-            <Link className="hover:underline underline-offset-4" href="#">
+            {data?.name ? <Link className="hover:underline underline-offset-4" href="#" onClick={handleLogout}>
                 Log Out
             </Link>
+            : 
+            <Link href="/login">
+                <Button className="bg-[#9B151E] hover:bg-[#9B151E]/90 text-white " size="sm">Sign In</Button>
+            </Link>
+            }
+            
         </nav>
         <Sheet>
             <SheetTrigger asChild>
