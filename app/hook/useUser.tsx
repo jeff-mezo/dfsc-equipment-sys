@@ -20,7 +20,7 @@ export default function useUser() {
             if(data.session?.user){
                 //fetch user data sheesh
                 const {data:user} = await supabase
-                    .from("profiles (Google)")
+                    .from("profiles")
                     .select("*") 
                     .eq("id", data.session.user.id)
                     .single();

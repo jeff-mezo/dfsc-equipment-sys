@@ -6,7 +6,7 @@ import UpLogo from '@/public/upLogo.png'
 import { Sheet, SheetTrigger, SheetContent }  from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { MenuIcon } from 'lucide-react'
-import useUser from '@/app/auth/hook/useUser'
+import useUser from '@/app/hook/useUser'
 
 const Header = () => {
 
