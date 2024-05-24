@@ -17,15 +17,17 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { ShoppingCart } from 'lucide-react'
+import { Equipment } from '@/components/equipment'
+// import { CartView } from './cart'
 
 
-interface Equipment {
-  id: number;
-  name: string;
-  description: string;
-  img: string;
-  stock: number;
-}
+// interface Equipment {
+//   id: string;
+//   name: string;
+//   image: string;
+//   stock: number;
+//   quantity: number;
+// }
 
 // interface CartItem {
 //   id: number;
@@ -33,7 +35,23 @@ interface Equipment {
 //   quantity: number;
 // }
 
+// interface Equipment {
+//   eqImg: string;
+//   eqName: string;
+//   eqDesc: string;
+//   eqStock: number;
+//   eqId: string;
+//   eqQuan: number;
+// }
+
+interface ListEquipmentProps {
+  data: {
+    equipment: Equipment[];
+  }
+}
+
 const Dashboard = () => {
+  
 
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [equipment, setEquipment] = useState<Equipment[] | null>(null);
@@ -53,6 +71,10 @@ const Dashboard = () => {
     fetchEquipment();
   }, [])
 
+
+  // adding to cart
+  // const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  // console.log("Data passed to ListProducts:", equipment);
   
 
   return (
@@ -102,32 +124,16 @@ const Dashboard = () => {
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className=" sm:max-w-[425px] ">
                 <DialogHeader>
-                <DialogTitle>Equipment Cart</DialogTitle>
+                  <DialogTitle>Equipment Cart</DialogTitle>
                 </DialogHeader>
-
-                {/* CART ITEMS vvv */}
-                {   
-                    equipment && equipment.map((equipmentItem, index) => (     
-                        <div className="grid gap-4 py-4" key={index}>
-                            <div className="grid grid-cols-[auto_1fr] items-center gap-4">
-                                <img
-                                alt="item"
-                                className="aspect-square rounded-md object-cover"
-                                height={64}
-                                src={ equipmentItem.img }
-                                width={64}
-                                />
-                                <div className="space-y-1">
-                                <p className="font-medium">{ equipmentItem.name }</p>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Quantity: { equipmentItem.stock }</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))
-                }
-
+                <div className='max-h-80 overflow-y-auto'>
+                  {/* CART ITEMS vvv */}
+                  {   
+                      
+                  }
+                </div>
                 <Button className='up-primary-red'>Continue Reservation</Button>
             </DialogContent>
         </Dialog>
@@ -141,25 +147,36 @@ const Dashboard = () => {
           </div>
 
         </div>
+          {/* {fetchError ? (
+                <div>Error fetching equipment: {fetchError}</div>
+              ) : equipment ? (
+                equipment.map((equipmentItem) => {
+                  console.log(equipmentItem.name)
+                  return <></>;
+                })
+              )       
+              : (
+                <div>Loading equipment...</div>
+              )
 
+            } */}
+
+ 
           {fetchError ? (
               <div>Error fetching equipment: {fetchError}</div>
             ) : equipment ? (
               equipment.map((equipmentItem) => (
-                <EquipmentCard
-                  eqName={equipmentItem.name}
-                  eqDesc={equipmentItem.description}
-                  eqImg={equipmentItem.img}
-                  eqStock={equipmentItem.stock}
-                  eqId={equipmentItem.id}
-                  key={equipmentItem.id}
+                <EquipmentCard 
+                  key={equipmentItem?.id}
+                  product={equipmentItem}
                 />
+                
               ))
+              
             
             ) : (
               <div>Loading equipment...</div>
-            )}
-
+            )} 
 
 
         </div>
