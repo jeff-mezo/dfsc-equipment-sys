@@ -44,7 +44,7 @@ const profile = () => {
                     <form>
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button className="px-12 up-primary-red">Update Information</Button>
+                                <Button className="px-12 w-60 up-primary-red">Update Information</Button>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">
                                 <DialogHeader>
@@ -58,7 +58,7 @@ const profile = () => {
                                         <Label htmlFor="name" className="text-right">
                                         Name
                                         </Label>
-                                        <Input id="" className="col-span-3 border-black"/>
+                                        <Input id="" type="name" className="col-span-3 border-black"/>
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
@@ -159,7 +159,22 @@ const profile = () => {
                             </DialogContent>
                         </Dialog>
                     </form>
-                    <Button className="px-8 mt-4 up-primary-red">Reservation Prerequisite</Button>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button className="px-8 w-60 mt-4 up-primary-red">Reservation Prerequisite</Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>Update Your Profile</DialogTitle>
+                                <DialogDescription className="text-justify">
+                                    Make sure to update your profile before proceeding to the verification process. Click proceed when you're done.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter className="py-2">
+                                <Link href="/verification"><Button className="up-primary-red" type="submit">Proceed</Button></Link>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </div>
             <div className="bg-white p-8 rounded-lg shadow-md w-100 flex flex-col">
