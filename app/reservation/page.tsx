@@ -1,10 +1,35 @@
-import React from 'react'
+"use client"
+
+import React, { useContext } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { ClipboardCheckIcon, ClipboardX } from 'lucide-react'
+import CartContext, { CartItem } from "@/app/equipmentpage/cartContext";
 
-const Reservation = () => {
+
+const Reservation: React.FC = () => {
+  const { addItemToCart, deleteItemFromCart, cart } = useContext(CartContext);
+
+  const increaseQty = (cartItem: CartItem) => {
+    const newQty = cartItem?.quantity + 1;
+    const item = { ...cartItem, quantity: newQty };
+
+    if (newQty > Number(cartItem.stock)) return;
+
+    addItemToCart(item);
+  };
+
+  const decreaseQty = (cartItem: CartItem) => {
+    const newQty = cartItem?.quantity - 1;
+    const item = { ...cartItem, quantity: newQty };
+
+    if (newQty <= 0) return;
+
+    addItemToCart(item);
+  };
+
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:pt-20">
       <div className="space-y-8 pt-10">
@@ -26,6 +51,9 @@ const Reservation = () => {
                 <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Borrow Date</dt>
                 <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Return Date</dt>
               </div>
+
+
+              {/* CART ITEM map this */}
               <div className="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6">
                 <dd className="text-sm text-gray-900 dark:text-gray-100">Microscope</dd>
                 <div className="flex items-center">
@@ -49,29 +77,9 @@ const Reservation = () => {
                   </div>
                 </div>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6">
-                <dd className="text-sm text-gray-900 dark:text-gray-100">Centrifuge</dd>
-                <div className="flex items-center">
-                  <Input
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    type="text"
-                  />
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="flex-1">
-                    <Input
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      type="datetime-local"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <Input
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      type="datetime-local"
-                    />
-                  </div>
-                </div>
-              </div>
+
+              
+              
             </dl>
           </div>
         </div>

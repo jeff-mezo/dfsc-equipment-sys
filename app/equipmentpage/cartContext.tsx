@@ -1,7 +1,9 @@
+"use client"
+
 import { useRouter } from "next/navigation";
 import { createContext, useState, useEffect, ReactNode } from "react";
 
-interface CartItem {
+export interface CartItem {
   id: string;
   name: string;
   image: string;
