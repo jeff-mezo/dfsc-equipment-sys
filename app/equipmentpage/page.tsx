@@ -4,7 +4,7 @@ import EquipmentCard from '@/components/equipment'
 import { supabase } from '@/config/supabaseClient'
 import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectGroup, SelectContent, SelectItem, SelectLabel } from '@/components/ui/select'
-import React, { useContext } from 'react'
+import React, { useCallback, useContext, useRef } from 'react'
 
 import { useEffect, useState } from 'react'
 import { 
@@ -16,10 +16,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { ShoppingCart } from 'lucide-react'
+import { SearchIcon, ShoppingCart } from 'lucide-react'
 import { Equipment } from '@/components/equipment'
 import Link from 'next/link'
 import CartContext from './cartContext'
+import { Input } from '@/components/ui/input'
+import { Search } from '@/components/search'
+import { useDebounce } from 'use-debounce'
+import { debounce } from 'lodash'
 // import { CartView } from './cart'
 
 
@@ -56,10 +60,34 @@ const Dashboard = () => {
   const { cart } = useContext(CartContext);
   
 
+  // const [fetchError, setFetchError] = useState<string | null>(null);
+  // const [equipment, setEquipment] = useState<Equipment[] | null>(null);
+  
+  // useEffect(() => {
+  //   const fetchEquipment = async () => {
+  //     const { data, error } = await supabase.from('equipments').select()
+
+  //       if (error) {
+  //         setFetchError(error.message);
+  //         setEquipment(null);
+  //       } else {
+  //         setEquipment(data as Equipment[]); // Cast data to Equipment[]
+  //       }
+  //   };
+    
+  //   fetchEquipment();
+  // }, [])
+
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [text, setText] = useState('');
+
+
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [equipment, setEquipment] = useState<Equipment[] | null>(null);
+
   
-  useEffect(() => {
+  // useEffect(() => {
+    
     const fetchEquipment = async () => {
       const { data, error } = await supabase.from('equipments').select()
 
@@ -71,13 +99,52 @@ const Dashboard = () => {
         }
     };
     
+  //   fetchEquipment();
+  // }, [])
+
+  const handleSearchState = async (searchQuery: string) => {
+    console.log(searchQuery)
+    if(searchQuery) {
+      const { data, error } = await supabase
+        .from('equipments')
+        .select()
+        .textSearch('name', searchQuery, {
+          type: 'websearch',
+          config: 'english',
+        })
+        if (fetchError) {
+          setFetchError(error? error.message : null);
+          setEquipment(null);
+        } else {
+          setEquipment(data as Equipment[]); // Cast data to Equipment[]
+        }
+
+    }
+  }
+
+  const debouncedSearch = useCallback(
+    debounce((searchQuery: string) => {
+      handleSearchState(searchQuery);
+    }, 500),
+    []
+  );
+
+  useEffect(() => {
     fetchEquipment();
-  }, [])
+  }, []);
 
+  useEffect(() => {
+    debouncedSearch(text)
+  }, [text, debouncedSearch])
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setText(e.target.value);
+  };
 
-  // adding to cart
-  // const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  // console.log("Data passed to ListProducts:", equipment);
+  const handleClear = () => {
+    setText('');
+    fetchEquipment();
+  };
   
 
   return (
@@ -87,7 +154,21 @@ const Dashboard = () => {
           
         <div className='flex flex-row w-full mx-auto px-5 justify-between'>
           <div className='flex flex-row'>
-            <Select>
+
+            {/* <Search /> */}
+            <div className="relative w-full sm:w-auto">
+              <SearchIcon className="absolute left-3 top-3 h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <Input
+                  className="w-full rounded-md border border-gray-300 bg-white px-10 py-2 text-sm focus:border-[#9B151E] focus:ring-[#9B151E] dark:border-gray-700 dark:bg-gray-950 dark:text-gray-50"
+                  placeholder="Search equipment..."
+                  type="text"
+                  value={text}
+                  onChange={handleChange}
+                  ref={inputRef}
+              />
+            </div>
+            <Button variant='outline' id='viewCart' className='mx-2' onClick={handleClear}>Clear</Button>
+            {/* <Select>
               <SelectTrigger className="w-[100px]">
                 <SelectValue placeholder="Filter" />
               </SelectTrigger>
@@ -115,7 +196,7 @@ const Dashboard = () => {
                   <SelectItem value="pineapple">Sort1</SelectItem>
                 </SelectGroup>
               </SelectContent>
-            </Select>
+            </Select> */}
           </div>
           <div className='flex flex-row'>
           <Link href="/reservation">

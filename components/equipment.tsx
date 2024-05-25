@@ -87,14 +87,7 @@ const EquipmentCard : React.FC<EquipmentProps> = ({ product }) => {
   //   setCartItems((prevItems) => [...prevItems, { id: itemId, count }]); // If using Next.js state
   // };
 
-  // Log the entire product object
-  console.log("Product object:", product);
 
-  // Log individual properties
-  console.log("Product ID:", product?.id);
-  console.log("Product Name:", product?.name);
-  console.log("Product Image URL:", product.img);
-  console.log("Product Stock:", product.stock);
 
   return (
       <div className="mx-5 my-5 max-w-[300px] bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-lg flex-grow">
