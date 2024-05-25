@@ -3,7 +3,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Textarea } from "@/components/ui/textarea"
-
 const incident = () => {
     return ( 
         <div className="overflow-x-hidden max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:pt-20">
@@ -18,7 +17,8 @@ const incident = () => {
             <div className="px-4 py-5 sm:px-6">
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Incident Information</h2>
             </div>
-            
+            <form>
+
             <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
             <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -30,6 +30,7 @@ const incident = () => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     id="name"
                     type="text"
+                    required
                   />
                 </div>
                 <div>
@@ -40,6 +41,7 @@ const incident = () => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     id="student-number"
                     type="text"
+                    required
                   />
                 </div>
               </div>
@@ -52,6 +54,7 @@ const incident = () => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     id="degree-program"
                     type="text"
+                    required
                   />
                 </div>
                 <div>
@@ -62,6 +65,7 @@ const incident = () => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     id="email"
                     type="text"
+                    required
                   />
                 </div>
               </div>
@@ -74,6 +78,7 @@ const incident = () => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     id="equipment-name"
                     type="text"
+                    required
                   />
                 </div>
                 <div>
@@ -84,6 +89,7 @@ const incident = () => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     id="equipment-id"
                     type="text"
+                    required
                   />
                 </div>
               </div>
@@ -96,6 +102,7 @@ const incident = () => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     id="date-incident"
                     type="date"
+                    required
                   />
                 </div>
                 <div>
@@ -106,6 +113,7 @@ const incident = () => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     id="time-incident"
                     type="time"
+                    required
                   />
                 </div>
               </div>
@@ -113,7 +121,7 @@ const incident = () => {
                 <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="desc-incident">
                   Incident Description
                 </Label>
-                <Textarea className="mt-2 h-40 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" id="desc-incident"/>
+                <Textarea className="mt-2 h-40 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" id="desc-incident" required/>
                 <div className="grid grid-cols-2 gap-4 pt-4">
                 <div>
                   <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="adviser">
@@ -123,16 +131,18 @@ const incident = () => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     id="adviser"
                     type="text"
+                    required
                   />
                 </div>
                 <div>
-                  <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="project">
+                  <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="proof-incident">
                     Proof of Incident
                   </Label>
                   <Input
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     id="picture-incident"
                     type="file"
+                    required
                   />
                 </div>
               </div>
@@ -142,6 +152,7 @@ const incident = () => {
                 </div>
               </div>
             </div>
+            </form>
           </div>
         </div>
       </div>
