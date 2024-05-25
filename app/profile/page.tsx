@@ -20,8 +20,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-
-
 const profile = () => {
     return (
         <div className="bg-gray-100 min-h-screen flex flex-col sm:flex-row justify-center items-center gap-8 pt-20">
@@ -44,7 +42,7 @@ const profile = () => {
                     <form>
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button className="px-12 up-primary-red">Update Information</Button>
+                                <Button className="px-12 w-60 up-primary-red">Update Information</Button>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">
                                 <DialogHeader>
@@ -159,7 +157,22 @@ const profile = () => {
                             </DialogContent>
                         </Dialog>
                     </form>
-                    <Button className="px-8 mt-4 up-primary-red">Reservation Prerequisite</Button>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button className="px-8 w-60 mt-4 up-primary-red">Reservation Prerequisite</Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>Update Your Profile</DialogTitle>
+                                <DialogDescription className="text-justify">
+                                    Make sure to update your profile before proceeding to the verification process. Click proceed when you're done.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter className="py-2">
+                                <Link href="/verification"><Button className="up-primary-red" type="submit">Proceed</Button></Link>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </div>
             <div className="bg-white p-8 rounded-lg shadow-md w-100 flex flex-col">
@@ -189,5 +202,4 @@ const profile = () => {
         </div>
     );
 };
-
 export default profile;
