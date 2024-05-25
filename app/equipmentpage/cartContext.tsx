@@ -11,20 +11,24 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface Cart {
+  cartItems: CartItem[];
+}
+
 interface CartContextType {
-  cart: CartItem[];
+  cart: Cart;
   addItemToCart: (item: CartItem) => void;
   deleteItemFromCart: (id: string) => void;
 }
 
 const CartContext = createContext<CartContextType>({
-  cart: [],
+  cart: { cartItems: [] },
   addItemToCart: () => {},
   deleteItemFromCart: () => {},
 });
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<Cart>({ cartItems: [] });
 
   const router = useRouter();
 
@@ -35,8 +39,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const setCartToState = () => {
     setCart(
       localStorage.getItem("cart")
-        ? JSON.parse(localStorage.getItem("cart") as string).cartItems
-        : []
+        ? JSON.parse(localStorage.getItem("cart") as string)
+        : { cartItems: [] }
     );
   };
 
@@ -55,16 +59,16 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       quantity,
     };
 
-    const isItemExist = cart.find((i) => i.id === item.id);
+    const isItemExist = cart.cartItems.find((i) => i.id === item.id);
 
     let newCartItems: CartItem[];
 
     if (isItemExist) {
-      newCartItems = cart.map((i) =>
+      newCartItems = cart.cartItems.map((i) =>
         i.id === isItemExist.id ? item : i
       );
     } else {
-      newCartItems = [...cart, item];
+      newCartItems = [...cart.cartItems, item];
     }
 
     localStorage.setItem("cart", JSON.stringify({ cartItems: newCartItems }));
@@ -72,7 +76,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const deleteItemFromCart = (id: string) => {
-    const newCartItems = cart.filter((i) => i.id !== id);
+    const newCartItems = cart.cartItems.filter((i) => i.id !== id);
 
     localStorage.setItem("cart", JSON.stringify({ cartItems: newCartItems }));
     setCartToState();
@@ -95,109 +99,210 @@ export default CartContext;
 
 
 
+// "use client"
 
+// import { useRouter } from "next/navigation";
+// import { createContext, useState, useEffect, ReactNode } from "react";
 
-// import { useRouter } from 'next/navigation';
-// import React, { createContext, ReactNode, useEffect, useState } from 'react';
+// export interface CartItem {
+//   id: string;
+//   name: string;
+//   image: string;
+//   stock: number;
+//   quantity: number;
+// }
 
-// interface CartItem {
-//     id: number;
-//     name: string;
-//     image: string;
-//     stock: number;
-//     quantity: number;
-//   }
-
-// interface MyComponentProps {
-//     children?: React.ReactNode; // Optional children prop
+// export interface Cart {
+//   cartItems: CartItem[];
 // }
 
 // interface CartContextType {
-//     cart: CartItem[];
-//     addItemToCart: (item: CartItem) => void;
-//     deleteItemFromCart: (id: string) => void;
+//   cart: Cart[];
+//   addItemToCart: (item: CartItem) => void;
+//   deleteItemFromCart: (id: string) => void;
 // }
 
 // const CartContext = createContext<CartContextType>({
-//     cart: [],
-//     addItemToCart: () => {},
-//     deleteItemFromCart: () => {},
+//   cart: [],
+//   addItemToCart: () => {},
+//   deleteItemFromCart: () => {},
 // });
 
 // export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-//     const [cart, setCart] = useState<CartItem[]>([]);
+//   const [cart, setCart] = useState<CartItem[]>([]);
 
-//   const router = useRouter;
-  
+//   const router = useRouter();
+
 //   useEffect(() => {
 //     setCartToState();
 //   }, []);
 
 //   const setCartToState = () => {
-//     setCartItems(
+//     setCart(
 //       localStorage.getItem("cart")
-//         ? JSON.parse(localStorage.getItem("cart") || "[]")
+//         ? JSON.parse(localStorage.getItem("cart") as string).cartItems
 //         : []
 //     );
 //   };
 
-//   const addItemToCart = async (item: Partial<CartItem> = {}): Promise<void> => {
-//     // ... (rest of your implementation using the typed CartItem interface)
-  
-//     const newItem: CartItem = {
-//       id: item.id || 0, // Handle missing id with empty string
-//       name: item.name || "", // Handle missing name with empty string
-//       image: item.image || "", // Handle missing image with empty string
-//       stock: item.stock || 0, // Handle missing stock with 0
-//       quantity: Math.max(1, item.quantity || 1), // Ensure quantity is at least 1
+//   const addItemToCart = ({
+//     id,
+//     name,
+//     image,
+//     stock,
+//     quantity = 1,
+//   }: CartItem) => {
+//     const item: CartItem = {
+//       id,
+//       name,
+//       image,
+//       stock,
+//       quantity,
 //     };
-  
-//     // ... (further processing using the validated newItem object)
 
 //     const isItemExist = cart.find((i) => i.id === item.id);
-  
+
 //     let newCartItems: CartItem[];
 
-//     if(isItemExist) {
-//         newCartItems = cart.map((i) => 
-//             i.id === isItemExist.id ? item : i
-//         );
+//     if (isItemExist) {
+//       newCartItems = cart.map((i) =>
+//         i.id === isItemExist.id ? item : i
+//       );
+//     } else {
+//       newCartItems = [...cart, item];
 //     }
 
+//     localStorage.setItem("cart", JSON.stringify({ cartItems: newCartItems }));
+//     setCartToState();
 //   };
 
+//   const deleteItemFromCart = (id: string) => {
+//     const newCartItems = cart.filter((i) => i.id !== id);
+
+//     localStorage.setItem("cart", JSON.stringify({ cartItems: newCartItems }));
+//     setCartToState();
+//   };
+
+//   return (
+//     <CartContext.Provider
+//       value={{
+//         cart,
+//         addItemToCart,
+//         deleteItemFromCart,
+//       }}
+//     >
+//       {children}
+//     </CartContext.Provider>
+//   );
+// };
+
+// export default CartContext;
+
+
+
+
+
+// // import { useRouter } from 'next/navigation';
+// // import React, { createContext, ReactNode, useEffect, useState } from 'react';
+
+// // interface CartItem {
+// //     id: number;
+// //     name: string;
+// //     image: string;
+// //     stock: number;
+// //     quantity: number;
+// //   }
+
+// // interface MyComponentProps {
+// //     children?: React.ReactNode; // Optional children prop
+// // }
+
+// // interface CartContextType {
+// //     cart: CartItem[];
+// //     addItemToCart: (item: CartItem) => void;
+// //     deleteItemFromCart: (id: string) => void;
+// // }
+
+// // const CartContext = createContext<CartContextType>({
+// //     cart: [],
+// //     addItemToCart: () => {},
+// //     deleteItemFromCart: () => {},
+// // });
+
+// // export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+// //     const [cart, setCart] = useState<CartItem[]>([]);
+
+// //   const router = useRouter;
   
+// //   useEffect(() => {
+// //     setCartToState();
+// //   }, []);
 
-// //   const addToCart = (itemId: number) => {
-// //     const existingItem = cartItems.find((item) => item.id === itemId);
-// //     if (existingItem) {
-// //       setCartItems((prevItems) =>
-// //         prevItems.map((item) =>
-// //           item.id === itemId ? { ...item, count: item.count + 1 } : item
-// //         )
-// //       );
-// //     } else {
-// //       setCartItems((prevItems) => [...prevItems, { id: itemId, count: 1 }]);
-// //     }
-// //   };
-
-// //   const removeFromCart = (itemId: number) => {
-// //     setCartItems((prevItems) =>
-// //       prevItems.filter((item) => item.id !== itemId)
+// //   const setCartToState = () => {
+// //     setCartItems(
+// //       localStorage.getItem("cart")
+// //         ? JSON.parse(localStorage.getItem("cart") || "[]")
+// //         : []
 // //     );
 // //   };
 
-// //   //const value = { cartItems, addToCart, removeFromCart };
+// //   const addItemToCart = async (item: Partial<CartItem> = {}): Promise<void> => {
+// //     // ... (rest of your implementation using the typed CartItem interface)
+  
+// //     const newItem: CartItem = {
+// //       id: item.id || 0, // Handle missing id with empty string
+// //       name: item.name || "", // Handle missing name with empty string
+// //       image: item.image || "", // Handle missing image with empty string
+// //       stock: item.stock || 0, // Handle missing stock with 0
+// //       quantity: Math.max(1, item.quantity || 1), // Ensure quantity is at least 1
+// //     };
+  
+// //     // ... (further processing using the validated newItem object)
 
-// //   return <CartContext.Provider value={
-// //     {
-// //         cartItems, 
-// //         addToCart, 
-// //         removeFromCart
+// //     const isItemExist = cart.find((i) => i.id === item.id);
+  
+// //     let newCartItems: CartItem[];
+
+// //     if(isItemExist) {
+// //         newCartItems = cart.map((i) => 
+// //             i.id === isItemExist.id ? item : i
+// //         );
 // //     }
-// //   }>
-// //     {children}
-// // </CartContext.Provider>;
-// // };
 
-// //export { CartContext, CartProvider };
+// //   };
+
+  
+
+// // //   const addToCart = (itemId: number) => {
+// // //     const existingItem = cartItems.find((item) => item.id === itemId);
+// // //     if (existingItem) {
+// // //       setCartItems((prevItems) =>
+// // //         prevItems.map((item) =>
+// // //           item.id === itemId ? { ...item, count: item.count + 1 } : item
+// // //         )
+// // //       );
+// // //     } else {
+// // //       setCartItems((prevItems) => [...prevItems, { id: itemId, count: 1 }]);
+// // //     }
+// // //   };
+
+// // //   const removeFromCart = (itemId: number) => {
+// // //     setCartItems((prevItems) =>
+// // //       prevItems.filter((item) => item.id !== itemId)
+// // //     );
+// // //   };
+
+// // //   //const value = { cartItems, addToCart, removeFromCart };
+
+// // //   return <CartContext.Provider value={
+// // //     {
+// // //         cartItems, 
+// // //         addToCart, 
+// // //         removeFromCart
+// // //     }
+// // //   }>
+// // //     {children}
+// // // </CartContext.Provider>;
+// // // };
+
+// // //export { CartContext, CartProvider };

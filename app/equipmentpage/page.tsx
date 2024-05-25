@@ -4,7 +4,7 @@ import EquipmentCard from '@/components/equipment'
 import { supabase } from '@/config/supabaseClient'
 import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectGroup, SelectContent, SelectItem, SelectLabel } from '@/components/ui/select'
-import React from 'react'
+import React, { useContext } from 'react'
 
 import { useEffect, useState } from 'react'
 import { 
@@ -18,6 +18,8 @@ import {
 } from '@/components/ui/dialog'
 import { ShoppingCart } from 'lucide-react'
 import { Equipment } from '@/components/equipment'
+import Link from 'next/link'
+import CartContext from './cartContext'
 // import { CartView } from './cart'
 
 
@@ -51,6 +53,7 @@ interface ListEquipmentProps {
 }
 
 const Dashboard = () => {
+  const { cart } = useContext(CartContext);
   
 
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -115,35 +118,20 @@ const Dashboard = () => {
             </Select>
           </div>
           <div className='flex flex-row'>
+          <Link href="/reservation">
+            <Button variant='outline' id='viewCart' className='bg-[#9B151E] hover:bg-[#9B151E]/90 hover:text-white text-white '>
+              <ShoppingCart className="mr-2 h- w-4" /> View Cart ({cart?.cartItems?.length || 0})
+            </Button>
+          </Link>
 
             {/* CART DIALOG: */}
-          <Dialog> 
-            <DialogTrigger asChild>
-                <Button variant='outline' id='viewCart'>
-                <ShoppingCart className="mr-2 h- w-4" /> View Cart
-                </Button>
-            </DialogTrigger>
-
-            <DialogContent className=" sm:max-w-[425px] ">
-                <DialogHeader>
-                  <DialogTitle>Equipment Cart</DialogTitle>
-                </DialogHeader>
-                <div className='max-h-80 overflow-y-auto'>
-                  {/* CART ITEMS vvv */}
-                  {   
-                      
-                  }
-                </div>
-                <Button className='up-primary-red'>Continue Reservation</Button>
-            </DialogContent>
-        </Dialog>
 
 
 
             <span className="md:px-1"></span>
-            <Button className='up-primary-red' id='reserve'>
+            {/* <Button className='up-primary-red' id='reserve'>
               Reserve Equipment
-            </Button>
+            </Button> */}
           </div>
 
         </div>
