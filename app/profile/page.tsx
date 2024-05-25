@@ -169,7 +169,7 @@ const profile = () => {
                                 </DialogDescription>
                             </DialogHeader>
                             <DialogFooter className="py-2">
-                                <Link href="/verification"><Button className="up-primary-red" type="submit">Proceed</Button></Link>
+                                <Link href="/verification"><Button className="up-primary-red">Proceed</Button></Link>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>

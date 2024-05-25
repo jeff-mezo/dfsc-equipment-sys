@@ -32,13 +32,13 @@ const Header = () => {
 
   return (
     <header className="absolute flex items-center justify-between h-16 w-screen px-4 md:px-6 bg-white dark:bg-gray-950 shadow">
-        <Link className="flex items-center gap-2" href="#">
+        <Link className="flex items-center gap-2" href="/equipmentpage">
             <Image src={UpLogo} alt="UpLogo"
                 className="w-12"/>
             <h1>DFSC Equipment Reservation System</h1>  
         </Link>
         <nav className="hidden md:flex gap-6 text-sm font-medium ">
-            {data?.id ? <Link className="hover:underline underline-offset-4" href="#">
+            {data?.id ? <Link className="hover:underline underline-offset-4" href="/profile">
                 {data.email}
             </Link> : <></>}
             
