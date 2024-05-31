@@ -6,7 +6,6 @@ import { createClient } from '@/utils/supabase/server'
 import { supabase } from '@/config/supabaseClient'
 import { NextApiRequest, NextApiResponse } from 'next';
 
-
 interface data {
   email: string;
   password: string;
@@ -118,8 +117,6 @@ export async function signup(formData: FormData) {
   
 
 }
-
-
 
 // const supabase = createClient()
 
