@@ -123,13 +123,11 @@ export const profiles_columns: ColumnDef<Profiles>[] = [
             }
             const handleVerify = () => {
                 console.log("verifying:", profiles.name);
-                verifyUser.bind(
-                    null,
+                verifyUser(
                     profiles.id,
-                    !profiles.isAdmin,
+                    !profiles.isAdmin
                 );
                 console.log("isAdmin:", profiles.isAdmin);
-               
             }
 
           return (
@@ -144,6 +142,9 @@ export const profiles_columns: ColumnDef<Profiles>[] = [
                 <DropdownMenuItem
                     onClick={() => {handleVerify()}}
                 >Verify</DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => {handleVerify()}}
+                >Unverify</DropdownMenuItem>
                 <DropdownMenuItem
                     onClick={() => {handleDelete()}}
                 >Delete</DropdownMenuItem>
