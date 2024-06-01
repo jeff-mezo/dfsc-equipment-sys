@@ -123,7 +123,7 @@ const EquipmentCard : React.FC<EquipmentProps> = ({ product }) => {
                 <Button { ...product?.stock == 0 && { disabled: true } } className="bg-[#9B151E] hover:bg-[#9B151E]/90 text-white" size="sm" onClick={handleIncrement0}>
                   +
                 </Button> */}
-                <Button className="bg-[#9B151E] hover:bg-[#9B151E]/90 text-white" onClick={addToCartHandler} >Add to Cart</Button>
+                <Button { ...product?.stock == 0 && { disabled: true } } className="bg-[#9B151E] hover:bg-[#9B151E]/90 text-white" onClick={addToCartHandler} >Add to Cart</Button>
               </div>
               
           </div>

@@ -15,6 +15,15 @@ interface data {
   isadmin: number;
 }
 
+export const fetchProfiles = async () => {
+  const { data, error } = await supabase.from('profiles').select('*');
+  if (error) {
+    console.error(error);
+    throw new Error(error.message);
+  }
+  return data;
+};
+
 export async function login() {
   let redirectPath: string | null = null
   try {

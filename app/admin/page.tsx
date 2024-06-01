@@ -20,9 +20,22 @@ import {
 import { CirclePlus } from 'lucide-react'
 import { DataTable } from '@/app/admin/data-table'
 import { User, columns } from "./columns"
+import { fetchProfiles } from '@/utils/actions'
 import { supabase } from '@/config/supabaseClient'
+import { profile } from 'console'
+import { GetServerSideProps, NextPage } from 'next'
 
-
+type Profile = {
+    id: string;
+    name: string;
+    contactno: string;
+    isAdmin: boolean;
+    // add other fields as per your profiles table
+  };
+  
+type Props = {
+    profiles: Profile[];
+};
 
 // async function getUsers(): Promise<User[]> {
 //     const res = await fetch(
@@ -42,40 +55,13 @@ import { supabase } from '@/config/supabaseClient'
 
 async function getData(): Promise<User[]> {
     // Fetch data from your API here.
-    return [
-      {
-        name: "test name",
-        email: "m@example.com",
-        status: true,
-      },
-      {
-        name: "test name",
-        email: "m@example.com",
-        status: true,
-      },
-      {
-        name: "test name",
-        email: "m@example.com",
-        status: true,
-      },
-      {
-        name: "test name",
-        email: "m@example.com",
-        status: true,
-      },
-      {
-        name: "test name",
-        email: "m@example.com",
-        status: true,
-      }
-    ] || []
+    
+    return fetchProfiles();
   }
    
 
 
-export default async function UserVerification() {
-
-    const data = await getData()
+const UserVerification = async () => {
 
     // const [users, setUsers] = React.useState<User[]>([]);
 
@@ -95,6 +81,8 @@ export default async function UserVerification() {
 
     // fetchUsers();
     // }, []);
+
+    const profiles = await getData();
 
     return (
         <div className='pt-20'>
@@ -191,10 +179,13 @@ export default async function UserVerification() {
                 </CardContent>    
             </Card>    
             <div className='container mx-auto py-10'>
-                <DataTable columns={columns} data={data} />
+                <DataTable columns={columns} data={profiles} />
             </div>
             {/* fetchError ? console.log("Error Fetching Users") :  */}
             
         </div>
     )
 }
+
+
+export default UserVerification;
