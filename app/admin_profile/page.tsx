@@ -31,4 +31,5 @@ const admin_profile = () => {
 
     </div>
      );
-}
+};
+export default admin_profile
