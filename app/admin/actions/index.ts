@@ -13,9 +13,9 @@ export async function deleteEquipment(id:string) {
     revalidatePath("/admin")
 }
 
-export async function verifyUser(id:string, isAdmin:boolean) {
+export async function verifyUser(id:string, isVerified:boolean) {
     const supbase = await createClient()
-    await supbase.from('profiles').update({isAdmin}).eq('id', id)
+    await supbase.from('profiles').update({isVerified}).eq('id', id)
     revalidatePath("/admin")
 }
 

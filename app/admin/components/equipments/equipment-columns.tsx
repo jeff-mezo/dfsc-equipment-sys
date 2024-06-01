@@ -7,6 +7,7 @@ import { MoreHorizontal } from "lucide-react";
 import { deleteEquipment, verifyUser } from "../../actions/index";
 import { Router } from "next/router";
 import { profile } from "console";
+import { toast } from "@/components/ui/use-toast";
 
 
 // This type is used to define the shape of our data.
@@ -27,6 +28,7 @@ export type Profiles = {
     email: string;
     name: number;
     isAdmin: boolean;
+    isVerified: boolean;
     prereq_Form5: boolean;
     prereq_Attendance: boolean;
 }
@@ -113,6 +115,10 @@ export const profiles_columns: ColumnDef<Profiles>[] = [
         header: "Attendance",
     },
     {
+        accessorKey: "isVerified",
+        header: "Verified",
+    },
+    {
         id: "actions",
         cell: ({ row }) => {
             const profiles = row.original
@@ -125,9 +131,9 @@ export const profiles_columns: ColumnDef<Profiles>[] = [
                 console.log("verifying:", profiles.name);
                 verifyUser(
                     profiles.id,
-                    !profiles.isAdmin
+                    !profiles.isVerified
                 );
-                console.log("isAdmin:", profiles.isAdmin);
+                console.log("isAdmin:", profiles.isVerified);
             }
 
           return (
@@ -140,10 +146,20 @@ export const profiles_columns: ColumnDef<Profiles>[] = [
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
-                    onClick={() => {handleVerify()}}
+                    onClick={() => {
+                        handleVerify(); 
+                        toast({
+                            description: (<p>{profiles.name } verified</p>)
+                        })
+                    }}
                 >Verify</DropdownMenuItem>
                 <DropdownMenuItem
-                    onClick={() => {handleVerify()}}
+                    onClick={() => {
+                        handleVerify(); 
+                        toast({
+                            description: (<p>{profiles.name } unverified</p>)
+                        })
+                    }}
                 >Unverify</DropdownMenuItem>
                 <DropdownMenuItem
                     onClick={() => {handleDelete()}}

@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from '../components/navbar'
 import QueryProvider from "@/components/query-provider";
 import { GlobalProvider } from "./GlobalProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +27,7 @@ export default function RootLayout({
             {children}
           </QueryProvider>
         </GlobalProvider>
-        
+        <Toaster />
       </body>
     </html>
   );
