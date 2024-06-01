@@ -165,7 +165,7 @@ const profile = () => {
                             <DialogHeader>
                                 <DialogTitle>Update Your Profile</DialogTitle>
                                 <DialogDescription className="text-justify">
-                                    Make sure to update your profile before proceeding to the verification process. Click proceed when you're done.
+                                    Make sure to update your profile before proceeding to the verification process. Click proceed when you&apos;re done.
                                 </DialogDescription>
                             </DialogHeader>
                             <DialogFooter className="py-2">

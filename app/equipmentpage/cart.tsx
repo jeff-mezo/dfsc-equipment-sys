@@ -10,8 +10,8 @@ interface CartItems {
 
 const CartView:React.FC<{cartItems: CartItems[]}> = ({cartItems}) => {
   return (
-    cartItems && cartItems.map(( item ) => (     
-        <div className="grid gap-4 py-4">
+    cartItems && cartItems.map(( item, index ) => (     
+        <div className="grid gap-4 py-4" key={index}>
             <div className="grid grid-cols-[auto_1fr] items-center gap-4">
                 <img
                 alt="item"

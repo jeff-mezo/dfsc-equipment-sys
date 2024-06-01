@@ -18,8 +18,8 @@ import {
     DialogTrigger,
   } from "@/components/ui/dialog"
 import { CirclePlus } from 'lucide-react'
-import { DataTable } from '@/app/admin/data-table'
-import { User, columns } from "./columns"
+import { DataTable } from '@/app/admin/components/equipments/equipment-data-table'
+import { User, columns } from "./components/equipments/equipment-columns"
 import { fetchProfiles } from '@/utils/actions'
 import { supabase } from '@/config/supabaseClient'
 import { profile } from 'console'
@@ -37,56 +37,19 @@ type Props = {
     profiles: Profile[];
 };
 
-// async function getUsers(): Promise<User[]> {
-//     const res = await fetch(
-//       'https://64a6f5fc096b3f0fcc80e3fa.mockapi.io/api/users'
-//     )
-//     const data = await res.json();
-//     return data
-// }
-
-    
-
-// const columns = [
-//     { Header: 'Name', accessor: 'name' },
-//     { Header: 'Email', accessor: 'email' },
-//     { Header: 'Status', accessor: 'status' },
-// ]
-
-async function getData(): Promise<User[]> {
-    // Fetch data from your API here.
-    
-    return fetchProfiles();
-  }
-   
 
 
 const UserVerification = async () => {
+    const { data, error } = await supabase.from('equipments').select('*');
 
-    // const [users, setUsers] = React.useState<User[]>([]);
-
-    // React.useEffect(() => {
-    // const fetchUsers = async () => {
-    //     const { data, error } = await supabase
-    //     .from('profiles') // Replace 'users' with your actual table name
-    //     .select();
-
-    //     if (error) {
-    //     console.error('error fetching users:', error);
-    //     return;
-    //     }
-
-    //     setUsers(data);
-    // };
-
-    // fetchUsers();
-    // }, []);
-
-    const profiles = await getData();
+    if (error) {
+        console.error(error);
+        return <div>Error loading data</div>;
+      }
 
     return (
         <div className='pt-20'>
-            <Card className='w-full max-w-md mx-auto'>
+            <Card className='w-9/12 mx-auto'>
                 <CardHeader>
                     <CardTitle>Inventory Controls:</CardTitle>
                 </CardHeader>
@@ -119,6 +82,9 @@ const UserVerification = async () => {
                                 <p>test</p>
                             </DialogHeader>
                         </DialogContent>
+                        <div className='mt-1 overflow-y-scroll max-h-96'>
+                            <DataTable columns={columns} data={data} />
+                        </div>
                     </Dialog>
 
                 </CardContent>    
@@ -179,7 +145,7 @@ const UserVerification = async () => {
                 </CardContent>    
             </Card>    
             <div className='container mx-auto py-10'>
-                <DataTable columns={columns} data={profiles} />
+                <DataTable columns={columns} data={data} />
             </div>
             {/* fetchError ? console.log("Error Fetching Users") :  */}
             

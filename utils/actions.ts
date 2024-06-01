@@ -123,7 +123,6 @@ export async function signup(formData: FormData) {
     if (redirectPath)
       redirect(redirectPath)
   }
-  
 
 }
 
