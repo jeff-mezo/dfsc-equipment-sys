@@ -18,8 +18,9 @@ import {
     DialogTrigger,
   } from "@/components/ui/dialog"
 import { CirclePlus } from 'lucide-react'
-import { DataTable } from '@/app/admin/components/equipments/equipment-data-table'
-import { User, columns } from "./components/equipments/equipment-columns"
+import { EquipmentDataTable } from '@/app/admin/components/equipments/equipment-data-table'
+import { ProfilesDataTable } from '@/app/admin/components/equipments/profiles-data-table'
+import { Profiles, eq_columns, profiles_columns } from "./components/equipments/equipment-columns"
 import { fetchProfiles } from '@/utils/actions'
 import { supabase } from '@/config/supabaseClient'
 import { profile } from 'console'
@@ -40,10 +41,11 @@ type Props = {
 
 
 const UserVerification = async () => {
-    const { data, error } = await supabase.from('equipments').select('*');
+    const { data: equipmentData, error: equipmentError } = await supabase.from('equipments').select('*');
+    const { data: profileData, error: profileError } = await supabase.from('profiles').select('*');
 
-    if (error) {
-        console.error(error);
+    if (equipmentError || profileError) {
+        console.error({ equipmentError, profileError });
         return <div>Error loading data</div>;
       }
 
@@ -51,10 +53,10 @@ const UserVerification = async () => {
         <div className='pt-20'>
             <Card className='w-9/12 mx-auto'>
                 <CardHeader>
-                    <CardTitle>Inventory Controls:</CardTitle>
+                    <CardTitle>Inventory:</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Dialog>
+                    {/* <Dialog>
                         <DialogTrigger asChild>
                             <Button variant={'outline'}>
                                 <CirclePlus className='h-4' />
@@ -66,35 +68,23 @@ const UserVerification = async () => {
                                 <DialogTitle>Add New Equipment</DialogTitle>
                             </DialogHeader>
                         </DialogContent>
-                    </Dialog>
+                    </Dialog> */}
                     <span className='w-1'>{"   "}</span>
 
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button variant={'outline'}>
-                                <CirclePlus className='h-4' />
-                                <span>Delete Equipment</span>
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Delete Equipment</DialogTitle>
-                                <p>test</p>
-                            </DialogHeader>
-                        </DialogContent>
-                        <div className='mt-1 overflow-y-scroll max-h-96'>
-                            <DataTable columns={columns} data={data} />
-                        </div>
-                    </Dialog>
+                    
+                    <div className='mt-1 max-96'>
+                        <EquipmentDataTable columns={eq_columns} data={equipmentData} />
+                    </div>
 
                 </CardContent>    
             </Card>    
-            <Card className='w-full max-w-md mx-auto'>
+
+            <Card className='w-9/12 mx-auto my-5'>
                 <CardHeader>
                     <CardTitle>User Management:</CardTitle>
                 </CardHeader>
                 <CardContent className='space-y-2'>
-                    <Dialog>
+                    {/* <Dialog>
                         <DialogTrigger asChild>
                             <Button variant={'outline'} className='w-full'>
                                 <CirclePlus className='h-4' />
@@ -124,9 +114,9 @@ const UserVerification = async () => {
                             </DialogHeader>
                         </DialogContent>
                     </Dialog>
-                    <span className='w-1'>{"   "}</span>
+                    <span className='w-1'>{"   "}</span> */}
 
-                    <Dialog>
+                    {/* <Dialog>
                         <DialogTrigger asChild>
                             <Button variant={'outline'}>
                                 <CirclePlus className='h-4' />
@@ -139,14 +129,16 @@ const UserVerification = async () => {
                                 <p>test</p>
                                 
                             </DialogHeader>
+                            
                         </DialogContent>
-                    </Dialog>
-
+                        
+                    </Dialog> */}
+                    <div className='mt-1 max-96'>
+                        <ProfilesDataTable columns={profiles_columns} data={profileData} />
+                    </div>   
                 </CardContent>    
             </Card>    
-            <div className='container mx-auto py-10'>
-                <DataTable columns={columns} data={data} />
-            </div>
+            
             {/* fetchError ? console.log("Error Fetching Users") :  */}
             
         </div>

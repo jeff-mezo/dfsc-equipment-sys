@@ -34,7 +34,6 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { CirclePlus } from "lucide-react"
-import CreateEquipment from "../create-equipment"
 
 
 interface DataTableProps<TData, TValue> {
@@ -42,7 +41,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
-export function EquipmentDataTable<TData, TValue>({
+export function ProfilesDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -83,12 +82,11 @@ export function EquipmentDataTable<TData, TValue>({
           </DialogTrigger>
           <DialogContent>
               <DialogHeader>
-                  <DialogTitle>Add Equipment</DialogTitle>
+                  <DialogTitle>Add Profile</DialogTitle>
                   <p>test</p>
               </DialogHeader>
           </DialogContent>
       </Dialog> */}
-      <CreateEquipment />
       </div>
 
       
