@@ -1,3 +1,4 @@
+"use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -20,7 +21,15 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
+import useUser from '@/app/hook/useUser'
+import { useQueryClient } from '@tanstack/react-query'
+
+
+
 const profile = () => {
+    const { isFetching, data } = useUser();
+    const queryClient = useQueryClient();
+
     return (
         <div className="bg-gray-100 min-h-screen flex flex-col sm:flex-row justify-center items-center gap-8 pt-20">
             <div className="bg-white p-8 rounded-lg shadow-md w-96 flex flex-col">
@@ -31,11 +40,11 @@ const profile = () => {
                     <Badge className="mb-4 up-primary-red">Unverified</Badge>
                 </div>
                 <div className="text-center mt-4">
-                    <h1 className="text-l font-semibold">Compound Microscope</h1>
+                    <h1 className="text-l font-semibold">{(data?.name) ? data.name : "-"}</h1>
                     <p className="text-gray-600 text-sm">Name</p>
-                    <p className="text-l font-semibold mt-4">cmiscroscope@up.edu.ph</p>
+                    <p className="text-l font-semibold mt-4">{(data?.email) ? data.email : "-"}</p>
                     <p className="text-gray-600 text-sm">Email</p>
-                    <p className="font-semibold mt-4">0995 250 1904</p>
+                    <p className="font-semibold mt-4">{(data?.contactno) ? data.contactno : "-"}</p>
                     <p className="text-gray-600 text-sm">Contact Number</p>
                 </div>
                 <div className="flex flex-col items-center justify-center mt-8">

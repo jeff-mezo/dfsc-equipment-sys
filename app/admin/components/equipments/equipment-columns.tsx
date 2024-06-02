@@ -10,6 +10,7 @@ import { profile } from "console";
 import { toast } from "@/components/ui/use-toast";
 
 
+
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Equipment = {

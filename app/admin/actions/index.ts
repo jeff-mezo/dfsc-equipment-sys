@@ -2,9 +2,16 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
+import { Equipment } from "../components/equipments/equipment-columns"
 
-export async function createEquipment(id:string) {
-}
+
+
+export async function createEquipment(dt: any) {
+    const supbase = await createClient() 
+    const result = await supbase.from("equipments").insert([dt]).single()
+    revalidatePath("/admin")
+    return JSON.stringify(result)
+  }
 
 
 export async function deleteEquipment(id:string) {
