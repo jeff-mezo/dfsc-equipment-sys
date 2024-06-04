@@ -3,20 +3,22 @@ import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
+import { Url } from "next/dist/shared/lib/router/router";
 
 
 export type Incident = {
-    user: string
+    name: string
     email: string
-    equipment: string
+    eq_name: string
     description: string
-    reported_date: string
+    date_incident: Date
     status: "Pending" | "Resolved"
+    proofincident: Url
 }
 
 export const columns: ColumnDef<Incident>[] = [
     {
-        accessorKey: "user",
+        accessorKey: "name",
         header: "User",
     },
     {
@@ -24,7 +26,7 @@ export const columns: ColumnDef<Incident>[] = [
         header: "Email",
     },
     {
-        accessorKey: "equipment",
+        accessorKey: "eq_name",
         header: "Equipment",
     },
     {
@@ -32,9 +34,15 @@ export const columns: ColumnDef<Incident>[] = [
         header: "Description",
     },
     {
-        accessorKey: "reported_date",
+        accessorKey: "date_incident",
         header: "Date Reported",
     },
+
+    {
+      accessorKey: "Proofincident",
+      header: "Proof of Incident",
+    },
+    
     {
         accessorKey: "status",
         header: "Status",
@@ -51,6 +59,7 @@ export const columns: ColumnDef<Incident>[] = [
             );
         },
     },
+
 
     {
         id: "actions",
@@ -83,3 +92,4 @@ export const columns: ColumnDef<Incident>[] = [
         },
       },
 ]
+
