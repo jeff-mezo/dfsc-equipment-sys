@@ -30,3 +30,16 @@ export async function handleFileUpload_Attendance(file: File): Promise<void> {
     console.log('Upload successful (Attendance):', data);
   }
 }
+
+export async function handleFileUpload_Incident(file: File): Promise<void> {
+  const filePath = file.name;
+  const { data, error } = await supabase.storage
+    .from('Incident')
+    .upload(filePath, file);
+
+  if (error) {
+    console.error('Upload error (Incident):', error);
+  } else {
+    console.log('Upload successful (Incident):', data);
+  }
+}
