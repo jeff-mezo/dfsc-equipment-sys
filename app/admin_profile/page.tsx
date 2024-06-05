@@ -30,7 +30,7 @@ const admin_profile = () => {
                 <p className="text-gray-600 text-sm">Name</p>
                 <p className="text-l font-semibold mt-4">{data?.email}</p>
                 <p className="text-gray-600 text-sm">Email</p>
-                <p className="font-semibold mt-4">2024-001</p>
+                <p className="font-semibold mt-4">{data?.id?.substring(0, 12)}...</p>
                 <p className="text-gray-600 text-sm">Admin ID</p>
             </div>
             <div className="flex flex-col items-center justify-center mt-8">
