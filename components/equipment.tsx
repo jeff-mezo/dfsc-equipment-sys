@@ -11,6 +11,7 @@ export interface Equipment {
   desc: string;
   stock: number;
   id: string;
+  eq_id: string;
   quantity: number;
 }
 
@@ -33,6 +34,9 @@ const EquipmentCard : React.FC<EquipmentProps> = ({ product }) => {
       image: product.img,
       stock: product.stock,
       quantity: product.quantity,
+      eq_id: product.eq_id,
+      borrowDate: '',
+      returnDate: ''
     });
   };
 

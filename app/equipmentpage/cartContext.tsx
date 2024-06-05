@@ -5,10 +5,13 @@ import { createContext, useState, useEffect, ReactNode } from "react";
 
 export interface CartItem {
   id: string;
+  eq_id: string;
   name: string;
   image: string;
   stock: number;
   quantity: number;
+  borrowDate: string;
+  returnDate: string;
 }
 
 export interface Cart {
@@ -46,17 +49,25 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const addItemToCart = ({
     id,
+    eq_id,
     name,
     image,
     stock,
     quantity = 1,
+    borrowDate,
+    returnDate,
   }: CartItem) => {
+
+    
     const item: CartItem = {
       id,
+      eq_id,
       name,
       image,
       stock,
       quantity,
+      borrowDate,
+      returnDate,
     };
 
     const isItemExist = cart.cartItems.find((i) => i.id === item.id);
@@ -76,6 +87,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const deleteItemFromCart = (id: string) => {
+    console.log("deleting..")
     const newCartItems = cart.cartItems.filter((i) => i.id !== id);
 
     localStorage.setItem("cart", JSON.stringify({ cartItems: newCartItems }));

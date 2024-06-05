@@ -1,14 +1,31 @@
 "use client"
 
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import useUser from '@/app/hook/useUser'
+import { useQueryClient } from '@tanstack/react-query'
 import { ClipboardCheckIcon, ClipboardX, Trash } from 'lucide-react'
 import CartContext, { CartItem, Cart } from "@/app/equipmentpage/cartContext";
+import { supabase } from '@/config/supabaseClient'
+
+// type itemType = {
+//   id: string;
+//   name: string;
+//   image: string;
+//   stock: number;
+//   quantity: number;
+//   borrowDate: string;
+//   returnDate: string;
+// };
 
 
 const Reservation: React.FC = () => {
+
+  const { isFetching, data } = useUser();
+  const queryClient = useQueryClient();
+
   const { addItemToCart, deleteItemFromCart, cart } = useContext(CartContext);
 
   const increaseQty = (cartItem: CartItem) => {
@@ -29,6 +46,114 @@ const Reservation: React.FC = () => {
     addItemToCart(item);
   };
 
+  //console.log("1 item in the cart: ", cart)
+
+  // const [formData, setFormData] = useState<FormData>({
+  //   name: '',
+  //   studentNumber: '',
+  //   degreeProgram: '',
+  //   project: '',
+  //   adviser: '',
+  // });
+
+  const [name, setName] = useState('');
+  const [studno, setStudNo] = useState('');
+  const [degree, setDegree] = useState('');
+  const [project, setProject] = useState('');
+  const [adviser, setAdviser] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  // input values from session:
+  useEffect(() => {
+    if(data) {
+        // if (!data) throw new Error('No user logged in');
+        // if (error) throw error;
+        //console.log('setting...')
+        setName((data?.name) ? data.name : '-');
+        setStudNo((data?.email) ? data.email : '-');
+        setProject((data?.organization) ? data.organization : '-');
+        setDegree((data?.degprog) ? data.degprog : '');
+    } else if(error) {
+        setError(error);
+    }
+}, [data]);
+
+  const [cartData, setCartData] = useState(cart.cartItems.map((item) => ({
+    ...item,
+    borrowDate: '',
+    returnDate: '',
+  })))
+  
+  //console.log("item in the cart: ", cart)
+  
+  const handleCartInputChange = (index: number, field: keyof CartItem, value: string) => {
+    const newCartData : any[] = [...cart.cartItems]
+    newCartData[index][field] = value
+    setCartData(newCartData)
+  }
+  
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { id, value } = e.target;
+  //   setFormData((prevState) => ({
+  //     ...prevState,
+  //     [id]: value,
+  //   }));
+  // };
+
+  const handleSubmit = async () => {
+    try {
+      console.log("submitting...")
+
+      const reservationform = {
+        name,
+        borrower_id: (data?.id),
+        email: studno,
+        degree,
+        project,
+        adviser,
+        created_at: new Date(),
+      }
+
+      
+      // Insert borrower data
+      const { data: borrowerData, error: borrowerError } = await supabase.from('reservationform').insert([reservationform]).select();
+      
+      if (borrowerError) throw borrowerError;
+      
+      
+      console.log("rervationform:", reservationform)
+
+      const reservationID = borrowerData[0].id;
+
+      // Prepare cart items data
+      const cartItems = cartData.map((item) => ({
+        borrower_id: (data?.id),
+        reservation_id: reservationID,
+        eq_id: item.id,
+        image: item.image,
+        eqname: item.name,
+        quantity: item.quantity,
+        borrow_date: item.borrowDate,
+        return_date: item.returnDate,
+      }));
+
+      console.log('cart: ', cartItems)
+
+      // Insert cart items data
+      const { data: cartItemsData, error: cartItemsError } = await supabase.from('cart_items').insert(cartItems);
+      console.log('cart: ', cartItemsData)
+      if (cartItemsError) throw cartItemsError;
+
+      // // Handle success (e.g., show a success message or redirect)
+      // console.log('Checkout successful', { borrowerData, cartItemsData });
+    } catch (error) {
+      // Handle error (e.g., show an error message)
+      console.error('Checkout failed', error);
+    }
+  };
+
+  
+
+  
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:pt-20">
@@ -71,12 +196,16 @@ const Reservation: React.FC = () => {
                         <Input
                             className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             type="datetime-local"
+                            value={(cartItem.borrowDate || '').toString().substring(0, 16)}
+                            onChange={(e) => handleCartInputChange(index, 'borrowDate', e.target.value)}
                         />
                         </div>
                         <div className="flex-1">
                         <Input
                             className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             type="datetime-local"
+                            value={cartItem.returnDate}
+                            onChange={(e) => handleCartInputChange(index, 'returnDate', e.target.value)}
                         />
                         </div>
                         <Button className=" sm:mt-0 bg-[#9B151E]" size={"sm"} data-action="increment" onClick={() => deleteItemFromCart(cartItem?.id)}>
@@ -86,41 +215,7 @@ const Reservation: React.FC = () => {
                   </div>
                   )
                 ) 
-
               }
-
-             
-
-              {/* CART ITEM map this */}
-              {/* <div className="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6">
-                <dd className="text-sm text-gray-900 dark:text-gray-100">Microscope</dd>
-                <div className="flex items-center">
-                  <Button className=" sm:mt-0 bg-[#9B151E]" size={"sm"}>-</Button>
-                  <span className="mx-5 text-gray-900 dark:text-gray-50 font-medium">1</span>
-                  <Input className='min-w-12 w-12 mx-2' type='number' value={1}></Input> 
-                  <Button className=" sm:mt-0 bg-[#9B151E]" size={"sm"}>+</Button>
-                   <Input
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    type="text"
-                  /> *
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="flex-1">
-                    <Input
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      type="datetime-local"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <Input
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      type="datetime-local"
-                    />
-                  </div>
-                </div>
-              </div> */}
-
-              
               
             </dl>
           </div>
@@ -139,16 +234,21 @@ const Reservation: React.FC = () => {
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   id="name"
                   type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
               <div>
                 <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="student-number">
-                  Student Number
+                  Email
                 </Label>
                 <Input
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   id="student-number"
-                  type="text"
+                  name='studno'
+                  type="email"
+                  value={studno}
+                  onChange={(e) => setStudNo(e.target.value)}
                 />
               </div>
             </div>
@@ -160,7 +260,10 @@ const Reservation: React.FC = () => {
                 <Input
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   id="degree-program"
+                  name='degree'
                   type="text"
+                  value={degree}
+                  onChange={(e) => setDegree(e.target.value)}
                 />
               </div>
               <div>
@@ -170,7 +273,10 @@ const Reservation: React.FC = () => {
                 <Input
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   id="project"
+                  name='project'
                   type="text"
+                  value={project}
+                  onChange={(e) => setProject(e.target.value)}
                 />
               </div>
             </div>
@@ -181,7 +287,10 @@ const Reservation: React.FC = () => {
               <Input
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 id="adviser"
+                name='adviser'
                 type="text"
+                value={adviser}
+                onChange={(e) => setAdviser(e.target.value)}
               />
             </div>
             <div className="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:flex sm:items-center sm:justify-between sm:px-6">
@@ -193,7 +302,7 @@ const Reservation: React.FC = () => {
                 <ClipboardX className="h-5 w-5 text-red-500" />
                 <span className="ml-2 text-sm font-medium text-red-500">Permit to Use</span>
               </div>
-              <Button className="mt-4 sm:mt-0 bg-[#9B151E]">Complete Checkout</Button>
+              <Button className="mt-4 sm:mt-0 bg-[#9B151E]" onClick={handleSubmit}>Complete Checkout</Button>
             </div>
           </div>
         </div>

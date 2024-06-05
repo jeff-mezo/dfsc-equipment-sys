@@ -56,7 +56,6 @@ const profile = () => {
     console.log(data?.name)
     // ============ PROFILE UPDATE: ================
     const [name, setName] = useState('');
-    console.log(data?.name)
     const [email, setEmail] = useState('');
     const [contactNum, setContactNum] = useState('');
     const [age, setAge] = useState('');
