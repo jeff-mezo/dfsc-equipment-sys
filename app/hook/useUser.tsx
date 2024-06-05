@@ -7,6 +7,17 @@ const initUser = {
     email: "",
     id: "",
     name: "",
+    profileimg: "",
+    isVerified: "",
+    isAdmin: "",
+    prereq_Form5: "",
+    prereq_Attendance: "",
+    jobtitle: "", 
+    age: "",
+    degprog: "",
+    sex: "",
+    education: "",
+    organization: "",
 }
 
 export default function useUser() {

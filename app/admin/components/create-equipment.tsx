@@ -65,9 +65,7 @@ export default function CreateEquipment() {
 
       const result = await createEquipment(state.formData);
 	 		const { error, data: todo } = JSON.parse(result);
-      console.log(error.message)
 			if (error?.message) {
-        console.log(error.message)
 				toast({
 					variant: "destructive",
 					title: "Fail to create equipment",
@@ -77,7 +75,6 @@ export default function CreateEquipment() {
 						</pre>
 					),
 				});
-        console.log(error.message)
 			} else {
 				toast({
 					title: "Successfully created equipment.",

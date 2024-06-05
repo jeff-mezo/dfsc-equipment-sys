@@ -22,7 +22,15 @@ export async function deleteEquipment(id:string) {
 
 export async function verifyUser(id:string, isVerified:boolean) {
     const supbase = await createClient()
-    await supbase.from('profiles').update({isVerified}).eq('id', id)
+    await supbase.from('profiles').update({
+        isVerified,
+        age: null,
+        jobTitle: null,
+        degprog: null,
+        sex: null,
+        education: null,
+        organization: null
+    }).eq('id', id)
     revalidatePath("/admin")
 }
 
