@@ -21,7 +21,7 @@ const admin_profile = () => {
         <div className="bg-white p-8 rounded-lg shadow-md w-96 flex flex-col">
             <div className="flex flex-col items-center">
                 <Avatar className="w-24 h-24 rounded-full mx-auto mb-2">
-                    <AvatarImage src="userimg.png"/>
+                    <AvatarImage src={(data?.profileimg) ? data?.profileimg : "https://hwchamber.co.uk/wp-content/uploads/2022/04/avatar-placeholder.gif"}/>
                 </Avatar>
                 <Badge className="mb-2 bg-green-700">Verified</Badge>
             </div>

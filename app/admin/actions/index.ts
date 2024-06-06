@@ -3,6 +3,10 @@
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { Equipment } from "../components/equipments/equipment-columns"
+import useUser from "@/app/hook/useUser";
+import { useQueryClient } from "@tanstack/react-query";
+
+
 
 
 
@@ -20,18 +24,22 @@ export async function deleteEquipment(id:string) {
     revalidatePath("/admin")
 }
 
-export async function verifyUser(id:string, isVerified:boolean) {
+export async function verifyUser(id:string, isVerified:boolean, data:any) {
+    // const { isFetching, data } = useUser();
+    // const queryClient = useQueryClient();
+
     const supbase = await createClient()
-    await supbase.from('profiles').update({
+    const result = await supbase.from('profiles').update({
         isVerified,
-        age: null,
-        jobTitle: null,
-        degprog: null,
-        sex: null,
-        education: null,
-        organization: null
-    }).eq('id', id)
+        age: (data?.age) ? data.age : null,
+        jobtitle: (data?.jobtitle) ? data.jobtitle : null,
+        degprog: (data?.degprog) ? data.degprog : null,
+        sex: (data?.sex) ? data.sex : null,
+        education: (data?.education) ? data.education : null,
+        organization: (data?.organization) ? data.organization : null
+    }).eq('id', id).single()
     revalidatePath("/admin")
+    return JSON.stringify(result)
 }
 
 

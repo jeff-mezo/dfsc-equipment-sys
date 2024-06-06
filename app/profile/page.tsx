@@ -175,7 +175,7 @@ const profile = () => {
                     <Avatar className="w-24 h-24 rounded-full mx-auto mb-2">
                         <AvatarImage src={(data?.profileimg) ? data?.profileimg : "https://hwchamber.co.uk/wp-content/uploads/2022/04/avatar-placeholder.gif"}/>
                     </Avatar>
-                    <Badge className="mb-4 up-primary-red">{(data?.isVerified) ? "Verified" : "Unverified"}</Badge>
+                    <Badge className="mb-4 up-primary-red">{(data?.isVerified) ? "Unverified" : "Verified" }</Badge>
                 </div>
                 <div className="text-center mt-4">
                     <h1 className="text-l font-semibold">{(data?.name) ? data.name : "-"}</h1>
