@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import {
@@ -26,6 +27,7 @@ import { fetchProfiles } from '@/utils/actions'
 import { supabase } from '@/config/supabaseClient'
 import { profile } from 'console'
 import { GetServerSideProps, NextPage } from 'next'
+import * as pdfjslib from 'pdfjs-dist';
 
 type Profile = {
     id: string;
@@ -95,8 +97,7 @@ const UserVerification = async () => {
                     </div>
 
                 </CardContent>    
-            </Card>    
-
+            </Card>           
             <Card className='w-9/12 mx-auto my-5'>
                 <CardHeader>
                     <CardTitle>User Management:</CardTitle>
@@ -161,6 +162,8 @@ const UserVerification = async () => {
             
         </div>
     )
+
+    
 }
 
 
