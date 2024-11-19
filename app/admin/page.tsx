@@ -20,8 +20,7 @@ import {
 import { CirclePlus } from 'lucide-react'
 import { EquipmentDataTable } from '@/app/admin/components/equipments/equipment-data-table'
 import { ProfilesDataTable } from '@/app/admin/components/equipments/profiles-data-table'
-import { IncidentDataTable } from './components/equipments/incident-data-table'
-import { Profiles, eq_columns, profiles_columns, incident_columns } from "./components/equipments/equipment-columns"
+import { Profiles, eq_columns, profiles_columns } from "./components/equipments/equipment-columns"
 import { fetchProfiles } from '@/utils/actions'
 import { supabase } from '@/config/supabaseClient'
 import { profile } from 'console'
@@ -44,30 +43,14 @@ type Props = {
 const UserVerification = async () => {
     const { data: equipmentData, error: equipmentError } = await supabase.from('equipments').select('*');
     const { data: profileData, error: profileError } = await supabase.from('profiles').select('*');
-    const { data: incidentData, error: incidentError} = await supabase.from('incidentform').select('*')
 
-    if (equipmentError || profileError || incidentError) {
-        console.error({ equipmentError, profileError, incidentError });
+    if (equipmentError || profileError) {
+        console.error({ equipmentError, profileError });
         return <div>Error loading data</div>;
       }
 
     return (
         <div className='pt-20'>
-
-            <Card className='w-9/12 mx-auto'>
-                    <CardHeader>
-                        <CardTitle>Incident Report:</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <span className='w-1'>{"   "}</span>
-
-                        
-                        <div className='mt-1 max-96'>
-                            <IncidentDataTable columns={incident_columns} data={incidentData} />
-                        </div>
-
-                    </CardContent>    
-            </Card>  
 
             <Card className='w-9/12 mx-auto'>
                 <CardHeader>
