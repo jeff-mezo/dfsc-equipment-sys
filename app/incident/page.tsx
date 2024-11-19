@@ -10,6 +10,8 @@ import { createClient } from '@/utils/supabase/client'
 import { ChangeEvent } from 'react';
 import { supabase } from '@/config/supabaseClient'
 import { handleFileUpload_Incident } from '@/utils/clientActions'
+import * as pdfjsLib from 'pdfjs-dist';
+
 
 const incident = () => {
   const [formData, setFormData] = useState({
