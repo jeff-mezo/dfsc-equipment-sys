@@ -32,6 +32,7 @@ const users = [
 ]
 
 type Reservaton = {
+  name: string;
   status: boolean;
   adviser: string;
   borrower_id: string;
@@ -163,7 +164,7 @@ export default function EquipmentReservation() {
   
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-20">
       <h1 className="text-2xl font-bold mb-6">Equipment Reservations</h1>
       <div className="max-w-3xl mx-auto">
         <Card>
@@ -211,7 +212,7 @@ export default function EquipmentReservation() {
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center">
                             <User className="mr-2 h-4 w-4" />
-                            <span className="font-medium">{reservation.borrowerName}</span>
+                            <span className="font-medium">{reservation.name}</span>
                           </div>
                           <Badge
                             variant={ // !!! STILL NEED TO CHANGE BOOLEAN STATUS TO NEW 
@@ -244,11 +245,11 @@ export default function EquipmentReservation() {
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[625px]">
                     <DialogHeader>
-                      <DialogTitle>{reservation.borrowerName}&apos;s Reservations</DialogTitle>
+                      <DialogTitle>{reservation.name}&apos;s Reservations</DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-4">
                       <div>
-                        <strong>Email:</strong> {reservation.borrowerName}
+                        <strong>Adviser:</strong> {reservation.adviser}
                       </div>
                       <div>
                         <strong>Reservation Date:</strong> {reservation.created_at}
@@ -265,17 +266,19 @@ export default function EquipmentReservation() {
                             <TableRow>
                               <TableHead>Item</TableHead>
                               <TableHead>Quantity</TableHead>
-                              <TableHead>Checkout Date</TableHead>
+                              <TableHead>Borrow Date</TableHead>
                               <TableHead>Return Date</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody> 
-                            {cart.map((item) => (
+                            {cart
+                            .filter((item) => item.reservation_id === reservation.id)
+                            .map((item) => (
                               <TableRow key={reservation.id}>
-                                <TableCell className="font-medium">{reservation.id === item.reservation_id ? item.eqname : null}</TableCell>
-                                {/* <TableCell>{item.serialNumber}</TableCell>
-                                <TableCell>{item.checkoutDate}</TableCell>
-                                <TableCell>{item.returnDate}</TableCell> */}
+                                <TableCell className="font-medium">{item.eqname}</TableCell>
+                                <TableCell>{item.quantity}</TableCell>
+                                <TableCell>{item.borrow_date}</TableCell>
+                                <TableCell>{item.return_date}</TableCell>  
                               </TableRow>
                             ))}
                           </TableBody>
