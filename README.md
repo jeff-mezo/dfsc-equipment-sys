@@ -1,5 +1,11 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Calendar and Headless UI
+
+```bash
+npm install @fullcalendar/core @fullcalendar/interaction @fullcalendar/react @fullcalendar/timegrid @headlessui/react @heroicons/react
+```
+
 ## Getting Started
 
 First, run the development server:

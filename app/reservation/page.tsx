@@ -79,9 +79,13 @@ const Reservation: React.FC = () => {
 
   const [cartData, setCartData] = useState(cart.cartItems.map((item) => ({
     ...item,
-    borrowDate: '',
-    returnDate: '',
   })))
+
+  //BORROW AND RETURN DATE ATTEMPT
+  const [borrowDate, setBorrowDate] = useState('')
+  const [returnDate, setReturnDate] = useState('')
+
+  useEffect
   
   //console.log("item in the cart: ", cart)
   
@@ -132,8 +136,8 @@ const Reservation: React.FC = () => {
         image: item.image,
         eqname: item.name,
         quantity: item.quantity,
-        borrow_date: item.borrowDate,
-        return_date: item.returnDate,
+        borrow_date: borrowDate,
+        return_date: returnDate,
       }));
 
       console.log('cart: ', cartItems)
@@ -170,16 +174,16 @@ const Reservation: React.FC = () => {
           </div>
           <div className="border-t border-gray-200 dark:border-gray-700">
             <dl>
-              <div className="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6">
+              <div className="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Equipment</dt>
                 <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Quantity</dt>
-                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Borrow Date</dt>
-                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Return Date</dt>
+                {/* <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Borrow Date</dt>
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Return Date</dt> */}
               </div>
 
               {
                 cart?.cartItems?.map((cartItem: CartItem, index: number) => (
-                  <div className="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6" key={index}>
+                  <div className="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-2 sm:gap-4 sm:px-6" key={index}>
                     <dd className="text-sm text-gray-900 dark:text-gray-100">{cartItem.name}</dd>
                     <div className="flex items-center">
                         <Button className=" sm:mt-0 bg-[#9B151E]" size={"sm"} data-action="decrement" onClick={() => decreaseQty(cartItem)}>-</Button>
@@ -190,28 +194,29 @@ const Reservation: React.FC = () => {
                           readOnly 
                         /> 
                         <Button className=" sm:mt-0 bg-[#9B151E]" size={"sm"} data-action="increment" onClick={() => increaseQty(cartItem)}>+</Button>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                        <div className="flex-1">
-                        <Input
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            type="datetime-local"
-                            value={(cartItem.borrowDate || '').toString().substring(0, 16)}
-                            onChange={(e) => handleCartInputChange(index, 'borrowDate', e.target.value)}
-                        />
-                        </div>
-                        <div className="flex-1">
-                        <Input
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            type="datetime-local"
-                            value={cartItem.returnDate}
-                            onChange={(e) => handleCartInputChange(index, 'returnDate', e.target.value)}
-                        />
-                        </div>
-                        <Button className=" sm:mt-0 bg-[#9B151E]" size={"sm"} data-action="increment" onClick={() => deleteItemFromCart(cartItem?.id)}>
+                        <Button className=" ml-5 sm:mt-0 bg-[#9B151E]" size={"sm"} data-action="increment" onClick={() => deleteItemFromCart(cartItem?.id)}>
                           <Trash className='w-3'/>
                         </Button>
                     </div>
+                    {/* <div className="flex items-center space-x-4">
+                        <div className="flex-1">
+                          <Input
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              type="datetime-local"
+                              value={(cartItem.borrowDate || '').toString().substring(0, 16)}
+                              onChange={(e) => handleCartInputChange(index, 'borrowDate', e.target.value)}
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <Input
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              type="datetime-local"
+                              value={cartItem.returnDate}
+                              onChange={(e) => handleCartInputChange(index, 'returnDate', e.target.value)}
+                          />
+                        </div>
+
+                    </div> */}
                   </div>
                   )
                 ) 
@@ -293,6 +298,42 @@ const Reservation: React.FC = () => {
                 onChange={(e) => setAdviser(e.target.value)}
               />
             </div>
+
+
+             {/* RESERVATION DURATION */}
+            <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
+              <div className="px-4 py-5 sm:px-6">
+                <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Reservation Duration</h2>
+              </div>
+              <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-6 space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="name">
+                      Borrow Date
+                    </Label>
+                    <Input
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        type="datetime-local"
+                        value={borrowDate}
+                        onChange={(e) => setBorrowDate(e.target.value)}
+                    />                
+                  </div>
+                  <div>
+                    <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="name">
+                      Return Date
+                    </Label>
+                    <Input
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        type="datetime-local"
+                        value={returnDate}
+                        onChange={(e) => setReturnDate(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
             <div className="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:flex sm:items-center sm:justify-between sm:px-6">
               <div className="flex items-center">
                 <ClipboardCheckIcon className="h-5 w-5 text-green-500" />
@@ -306,6 +347,9 @@ const Reservation: React.FC = () => {
             </div>
           </div>
         </div>
+
+       
+
       </div>
     </div>
   )
