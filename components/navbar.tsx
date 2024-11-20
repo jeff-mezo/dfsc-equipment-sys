@@ -37,21 +37,26 @@ const Header = () => {
                 className="w-12"/>
             <h1>DFSC Equipment Reservation System</h1>  
         </Link>
-        <nav className="hidden md:flex gap-6 text-sm font-medium ">
-            {data?.id ? <Link className="hover:underline underline-offset-4" href="/profile">
-                {data.email}
-            </Link> : <></>}
-            
-            {data?.name ? <Link className="hover:underline underline-offset-4" href="#" onClick={handleLogout}>
-                Log Out
+        <div className='flex flex-row'>
+            <Link href="/calendar" className='mx-2'>
+                <Button className="bg-[#9B151E] hover:bg-[#9B151E]/90 text-white " size="sm">Calendar</Button>
             </Link>
-            : 
-            <Link href="/login">
-                <Button className="bg-[#9B151E] hover:bg-[#9B151E]/90 text-white " size="sm">Sign In</Button>
-            </Link>
-            }
-            
-        </nav>
+            <nav className="hidden md:flex gap-6 text-sm font-medium ">
+                {data?.id ? <Link className="hover:underline underline-offset-4 my-auto" href="/profile">
+                    {data.email}
+                </Link> : <></>}
+                
+                {data?.name ? <Link className="hover:underline underline-offset-4 my-auto" href="#" onClick={handleLogout}>
+                    Log Out
+                </Link>
+                : 
+                <Link href="/login">
+                    <Button className="bg-[#9B151E] hover:bg-[#9B151E]/90 text-white " size="sm">Sign In</Button>
+                </Link>
+                }
+                
+            </nav>
+        </div>
         <Sheet>
             <SheetTrigger asChild>
                 <Button className="md:hidden" size="icon" variant="outline">
