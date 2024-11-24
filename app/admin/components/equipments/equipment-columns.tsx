@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
-import { deleteEquipment, deleteIncident, verifyUser } from "../../actions/index";
+import { deleteEquipment, verifyUser } from "../../actions/index";
 import { Router } from "next/router";
 import { profile } from "console";
 import { toast } from "@/components/ui/use-toast";

@@ -1,5 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/button"
+    
 import { ColumnDef } from "@tanstack/react-table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
@@ -7,6 +8,16 @@ import { Url } from "next/dist/shared/lib/router/router";
 import {  deleteIncident, resolveIncident } from "../actions/index";
 import useUser from "@/app/hook/useUser";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { DialogClose } from "@radix-ui/react-dialog";
 
 
 export type Incident = {
@@ -150,12 +161,46 @@ export const incident_columns: ColumnDef<Incident>[] = [
               {/* <DropdownMenuItem
 
               >Edit</DropdownMenuItem> */}
-              <DropdownMenuItem
-                  onClick={() => {handleResolve()}}
-              >Mark as Resolved</DropdownMenuItem>
-              <DropdownMenuItem
-                  onClick={() => {handleDelete()}}
-              >Deleted</DropdownMenuItem>
+               <Dialog>
+                    <DialogTrigger asChild>
+                        <Button className="flex flex-col px-8 w-60 up-primary-red">Mark as Resolved</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                            <DialogTitle>Confirm Incident to be Resolved</DialogTitle>
+                            <DialogDescription className="text-justify">
+                                By marking this incident report as resolved, you confirm that all necessary actions have been taken, and the issue has been addressed to the satisfaction of all relevant parties. Are you sure you want to proceed?
+                            </DialogDescription>
+                            </DialogHeader>
+                        <DialogFooter className="py-2">
+                            <DialogClose asChild>
+                                    <Button className="up-primary-red" onClick={handleResolve}>
+                                        Mark as Resolved
+                                    </Button>
+                            </DialogClose>
+                         </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button className="px-8 w-60 mt-2 up-primary-red">Delete</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                            <DialogTitle>Confirm Incident to be Deleted</DialogTitle>
+                            <DialogDescription className="text-justify">
+                            By deleting this incident report, you acknowledge that all associated data will be permanently removed and cannot be recovered. Are you sure you want to proceed with this action?
+                            </DialogDescription>
+                            </DialogHeader>
+                        <DialogFooter className="py-2">
+                            <DialogClose asChild>
+                                    <Button className="up-primary-red" onClick={handleDelete}>
+                                        Delete
+                                    </Button>
+                            </DialogClose>
+                         </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </DropdownMenuContent>
           </DropdownMenu>
         )
