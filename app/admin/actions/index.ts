@@ -17,6 +17,27 @@ export async function createEquipment(dt: any) {
     return JSON.stringify(result)
   }
 
+  export async function updateEquipment(id: any, dt: any) {
+    const supabase = await createClient();
+  
+    console.log("Updating equipment with:", { id, dt }); // Debugging input
+  
+    const result = await supabase
+      .from("equipments")
+      .update(dt)
+      .eq("eq_id", id); 
+  
+    console.log("Supabase response:", result); // Debugging output
+  
+    if (result.error) {
+      console.error("Supabase update error:", result.error);
+    }
+  
+    revalidatePath("/admin"); // Revalidate to reflect changes
+    return JSON.stringify(result);
+  }
+  
+  
 
 export async function deleteEquipment(id:string) {
     const supbase = await createClient()
