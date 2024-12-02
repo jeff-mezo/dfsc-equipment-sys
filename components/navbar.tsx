@@ -31,7 +31,7 @@ const Header = () => {
     }
 
   return (
-    <header className="absolute flex items-center justify-between h-16 w-screen px-4 md:px-6 bg-white dark:bg-gray-950 shadow">
+    <header className="z-50 sticky top-0 flex items-center justify-between h-16 w-screen px-4 md:px-6 bg-white dark:bg-gray-950 shadow">
         <Link className="flex items-center gap-2" href="/equipmentpage">
             <Image src={UpLogo} alt="UpLogo"
                 className="w-12"/>
