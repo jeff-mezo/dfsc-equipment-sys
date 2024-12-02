@@ -12,7 +12,9 @@ import { CartItem } from "@/app/equipmentpage/cartContext";
 import { getCoreRowModel, createTable } from '@tanstack/react-table';
 import useUser from "@/app/hook/useUser";
 import { useQueryClient } from "@tanstack/react-query";
-
+import UpdateEquipment from "../update-equipment";
+import { useState } from "react";
+import {Trash, Pencil } from "lucide-react"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -24,6 +26,8 @@ export type Equipment = {
     stock: number;
     eqcode: string;
     roomNum: number;
+    description: string;
+    img: string;
 }
 
 export type Profiles = {
@@ -53,59 +57,76 @@ export type Incident = {
 
 
 export const eq_columns: ColumnDef<Equipment>[] = [
-
-
     {
-        accessorKey: "id",
-        header: "ID",
+      accessorKey: "id",
+      header: "ID",
     },
     {
-        accessorKey: "name",
-        header: "Name",  
+      accessorKey: "name",
+      header: "Name",
     },
     {
-        accessorKey: "stock",
-        header: "Stock",
+      accessorKey: "stock",
+      header: "Stock",
     },
     {
-        accessorKey: "eqcode",
-        header: "Code",
+      accessorKey: "eqcode",
+      header: "Code",
     },
     {
-        accessorKey: "roomNum",
-        header: "Room",
+      accessorKey: "roomNum",
+      header: "Room",
     },
     {
-        id: "actions",
-        cell: ({ row }) => {
-            const equipment = row.original
+      id: "actions",
+      cell: ({ row }) => {
+        const equipment = row.original;
+        const queryClient = useQueryClient();
+  
+        const handleDelete = () => {
+          deleteEquipment(equipment.eq_id)
+            .then(() => {
+              toast({
+                title: "Equipment deleted",
+                description: `${equipment.name} has been deleted successfully.`,
+              });
+              // Invalidate equipment data to refresh the table
+              queryClient.invalidateQueries({ queryKey: ["equipment"] });
 
-            const handleDelete = () => {
-                console.log("deleting:", equipment.eq_id);
-                deleteEquipment(equipment.eq_id);
-            }
-
-          return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {/* <DropdownMenuItem
-
-                >Edit</DropdownMenuItem> */}
-                <DropdownMenuItem
-                    onClick={() => {handleDelete()}}
-                >Delete</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )
-        },
+            })
+            .catch((err) => {
+              toast({
+                variant: "destructive",
+                title: "Failed to delete equipment",
+                description: err.message,
+              });
+            });
+        };
+  
+        const handleUpdate = (updatedEquipment: Equipment) => {
+          toast({
+            title: "Equipment updated",
+            description: `${updatedEquipment.name} has been updated successfully.`,
+          });
+          queryClient.invalidateQueries({ queryKey: ["equipment"] }); // Refresh table data
+        };
+        
+  
+        return (
+          <div className="flex items-center">
+            <Button className="mx-2" variant="outline" onClick={handleDelete}>
+              <Trash className="h-4 w-4" />
+            </Button>
+            <UpdateEquipment
+              equipment={equipment}
+              onUpdate={handleUpdate}
+            />
+          </div>
+        );
       },
-]
+    },
+  ];
+  
 
 
 
