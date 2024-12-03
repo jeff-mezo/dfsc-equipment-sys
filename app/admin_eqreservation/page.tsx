@@ -16,21 +16,21 @@ import { Database } from '@/lib/types/supabase'
 import { revalidatePath } from 'next/cache'
 
 // Mock data for users with reservations
-const users = [
-  { id: 1, name: 'Alice Josadsahnson', email: 'alice@example.com', reservationDate: '2023-05-01', status: 'pending', items: [
-    { id: 101, name: 'Laptasdasdop', serialNumber: 'LT001', checkoutDate: '2023-05-01', returnDate: '2023-05-15' },
-    { id: 102, name: 'Projector', serialNumber: 'PJ001', checkoutDate: '2023-05-01', returnDate: '2023-05-03' }
-  ]},
-  { id: 2, name: 'Bob Smith', email: 'bob@example.com', reservationDate: '2023-05-02', status: 'pending', items: [
-    { id: 103, name: 'Camera', serialNumber: 'CM001', checkoutDate: '2023-05-02', returnDate: '2023-05-09' }
-  ]},
-  { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', reservationDate: '2023-05-03', status: 'pending', items: [
-    { id: 104, name: 'Microphone', serialNumber: 'MC001', checkoutDate: '2023-05-03', returnDate: '2023-05-05' },
-    { id: 105, name: 'Speakers', serialNumber: 'SP001', checkoutDate: '2023-05-03', returnDate: '2023-05-05' },
-    { id: 106, name: 'Tripod', serialNumber: 'TP001', checkoutDate: '2023-05-03', returnDate: '2023-05-05' },
-    { id: 107, name: 'Lighting Kit', serialNumber: 'LK001', checkoutDate: '2023-05-03', returnDate: '2023-05-05' }
-  ]},
-]
+// const users = [
+//   { id: 1, name: 'Alice Josadsahnson', email: 'alice@example.com', reservationDate: '2023-05-01', status: 'pending', items: [
+//     { id: 101, name: 'Laptasdasdop', serialNumber: 'LT001', checkoutDate: '2023-05-01', returnDate: '2023-05-15' },
+//     { id: 102, name: 'Projector', serialNumber: 'PJ001', checkoutDate: '2023-05-01', returnDate: '2023-05-03' }
+//   ]},
+//   { id: 2, name: 'Bob Smith', email: 'bob@example.com', reservationDate: '2023-05-02', status: 'pending', items: [
+//     { id: 103, name: 'Camera', serialNumber: 'CM001', checkoutDate: '2023-05-02', returnDate: '2023-05-09' }
+//   ]},
+//   { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', reservationDate: '2023-05-03', status: 'pending', items: [
+//     { id: 104, name: 'Microphone', serialNumber: 'MC001', checkoutDate: '2023-05-03', returnDate: '2023-05-05' },
+//     { id: 105, name: 'Speakers', serialNumber: 'SP001', checkoutDate: '2023-05-03', returnDate: '2023-05-05' },
+//     { id: 106, name: 'Tripod', serialNumber: 'TP001', checkoutDate: '2023-05-03', returnDate: '2023-05-05' },
+//     { id: 107, name: 'Lighting Kit', serialNumber: 'LK001', checkoutDate: '2023-05-03', returnDate: '2023-05-05' }
+//   ]},
+// ]
 
 type Reservaton = {
   name: string;
@@ -246,7 +246,7 @@ export default function EquipmentReservation() {
                 <Dialog key={reservation.id}>
                   <DialogTrigger asChild>
                     <Button
-                      className="w-full justify-start text-left font-normal h-auto py-4 px-4"
+                      className="w-full justify-start bg-white text-black text-left font-normal h-auto py-4 px-4 outline outline-1 outline-slate-300 hover:bg-transparent hover:text-black hover:border-transparent hover:shadow-none hover:outline-slate-400"                    
                     >
                       <div className="flex flex-col w-full">
                         <div className="flex items-center justify-between mb-2">
