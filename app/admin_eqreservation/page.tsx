@@ -15,22 +15,7 @@ import { supabase } from '@/config/supabaseClient'
 import { Database } from '@/lib/types/supabase'
 import { revalidatePath } from 'next/cache'
 
-// Mock data for users with reservations
-// const users = [
-//   { id: 1, name: 'Alice Josadsahnson', email: 'alice@example.com', reservationDate: '2023-05-01', status: 'pending', items: [
-//     { id: 101, name: 'Laptasdasdop', serialNumber: 'LT001', checkoutDate: '2023-05-01', returnDate: '2023-05-15' },
-//     { id: 102, name: 'Projector', serialNumber: 'PJ001', checkoutDate: '2023-05-01', returnDate: '2023-05-03' }
-//   ]},
-//   { id: 2, name: 'Bob Smith', email: 'bob@example.com', reservationDate: '2023-05-02', status: 'pending', items: [
-//     { id: 103, name: 'Camera', serialNumber: 'CM001', checkoutDate: '2023-05-02', returnDate: '2023-05-09' }
-//   ]},
-//   { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', reservationDate: '2023-05-03', status: 'pending', items: [
-//     { id: 104, name: 'Microphone', serialNumber: 'MC001', checkoutDate: '2023-05-03', returnDate: '2023-05-05' },
-//     { id: 105, name: 'Speakers', serialNumber: 'SP001', checkoutDate: '2023-05-03', returnDate: '2023-05-05' },
-//     { id: 106, name: 'Tripod', serialNumber: 'TP001', checkoutDate: '2023-05-03', returnDate: '2023-05-05' },
-//     { id: 107, name: 'Lighting Kit', serialNumber: 'LK001', checkoutDate: '2023-05-03', returnDate: '2023-05-05' }
-//   ]},
-// ]
+
 
 type Reservaton = {
   name: string;
@@ -67,7 +52,7 @@ export default function EquipmentReservation() {
   const [cart, setCarts] = useState<Cart[]>([]);
   const [profiles, setProfiles] = useState<Profiles[]>([]);
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'accepted' | 'pending' | 'denied'>('all');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   
   useEffect(() => {
@@ -166,27 +151,61 @@ export default function EquipmentReservation() {
     }
   }
 
-  const filteredAndSortedReservations = useMemo(() => {
-    const mergedData = reservations.map(reservation => {      
-      const borrowerProfile = profiles.find(profile => profile.id === reservation.borrower_id);      
-      return {        
-        ...reservation,        
-        borrowerName: borrowerProfile ? borrowerProfile.name : 'Unknown',      
-      };    
-    });
 
+  // RESERVATION SORTING PART:
+
+  // implementation #1: di mugana ywa
+  // const filteredAndSortedReservations = useMemo(() => {
+  //   const mergedData = reservations.map(reservation => {      
+  //     const borrowerProfile = profiles.find(profile => profile.id === reservation.borrower_id);      
+  //     return {        
+  //       ...reservation,        
+  //       borrowerName: borrowerProfile ? borrowerProfile.name : 'Unknown',      
+  //     };    
+  //   });
+
+  //   return mergedData
+  //     .filter(reservation =>  (reservation.borrowerName.toLowerCase().includes(search.toLowerCase()))
+  //     ||  reservation.adviser.toLowerCase().includes(search.toLowerCase())
+  //     &&  (statusFilter === 'all' || reservation.status === statusFilter)
+  //     )
+  //     .sort((a, b) => {        
+  //       const dateA = new Date(a.created_at).getTime();        
+  //       const dateB = new Date(b.created_at).getTime();        
+  //       return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;      
+  //     });
+  // }, [reservations, profiles, search, statusFilter, sortOrder]);
+  
+
+  // implementation #2:
+  const filteredAndSortedReservations = useMemo(() => {
+    // Merge data to add borrowerName to the reservation
+    const mergedData = reservations.map((reservation) => {
+      const borrowerProfile = profiles.find((profile) => profile.id === reservation.borrower_id);
+      return {
+        ...reservation,
+        borrowerName: borrowerProfile ? borrowerProfile.name : 'Unknown',
+      };
+    });
+  
+    // Filter based on search and status
     return mergedData
-      .filter(reservation =>  (reservation.borrowerName.toLowerCase().includes(search.toLowerCase()))
-      ||  reservation.adviser.toLowerCase().includes(search.toLowerCase())
-      &&  (statusFilter === 'all')
-      )
-      .sort((a, b) => {        
-        const dateA = new Date(a.created_at).getTime();        
-        const dateB = new Date(b.created_at).getTime();        
-        return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;      
+      .filter((reservation) => {
+        const matchesSearch =
+          reservation.borrowerName.toLowerCase().includes(search.toLowerCase()) ||
+          reservation.adviser.toLowerCase().includes(search.toLowerCase());
+        
+        const matchesStatus = statusFilter === 'all' || reservation.status === statusFilter;
+  
+        // Return true if both search and status filters are satisfied
+        return matchesSearch && matchesStatus;
+      })
+      .sort((a, b) => {
+        const dateA = new Date(a.created_at).getTime();
+        const dateB = new Date(b.created_at).getTime();
+        return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
       });
   }, [reservations, profiles, search, statusFilter, sortOrder]);
-  
   
   // FIX ICON ERROR
   interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -220,7 +239,7 @@ export default function EquipmentReservation() {
               />
 
               </div>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as 'all' | 'pending' | 'accepted' | 'denied')}>
                 <SelectTrigger className="w-full md:w-[180px]">
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
@@ -269,7 +288,7 @@ export default function EquipmentReservation() {
                         </div>
                         <div className="flex items-center text-sm text-muted-foreground mb-2">
                           <Calendar className="mr-2 h-4 w-4" />
-                          <span>{reservation.created_at}</span>
+                          <span>{new Date(reservation.created_at).toLocaleDateString()}</span>
                         </div>
                         <div className="flex flex-col">
                           <span className="text-sm font-medium mb-1">Reserved Items:</span>
@@ -301,7 +320,7 @@ export default function EquipmentReservation() {
                         <strong>Adviser:</strong> {reservation.adviser}
                       </div>
                       <div>
-                        <strong>Reservation Date:</strong> {reservation.created_at}
+                        <strong>Reservation Date:</strong> {new Date(reservation.created_at).toLocaleDateString()}
                       </div>
                       <div>
                         <strong>Status:</strong> <Badge>{reservation.status}</Badge>
@@ -330,8 +349,8 @@ export default function EquipmentReservation() {
                               <TableRow key={reservation.id}>
                                 <TableCell className="font-medium">{item.eqname}</TableCell>
                                 <TableCell>{item.quantity}</TableCell>
-                                <TableCell>{item.borrow_date}</TableCell>
-                                <TableCell>{item.return_date}</TableCell>  
+                                <TableCell>{new Date(item.borrow_date).toLocaleDateString()}</TableCell>
+                                <TableCell>{new Date(item.return_date).toLocaleDateString()}</TableCell>  
                               </TableRow>
                             ))}
                           </TableBody>
