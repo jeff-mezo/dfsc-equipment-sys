@@ -1,11 +1,15 @@
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 /*
+DEC 7 2024 PATCH NOTES:
+- Replaced database cell hasProof to incidentReportFilename to allow searching in PDF viewer
+- Replaced Incident Proof Label to Incedent Report Filename 
+- incident page now receives filename from clientActions.ts thru incident upload handler
+
 DEC 6 2024 PATCH NOTES:
 - Added restriction to accept only pdf files
 - Added checks if the user is logged in
 - Added user session fetch to find userID currently logged in
 - Added global variable isValidFileType for handleSubmit logic for incorrect file type
-
 
 LINKED FILES:
 - clientActions.ts
@@ -48,7 +52,7 @@ const incident = () => {
     time_incident: '',
     description: '',
     adviser: '',
-    proofIncident: undefined // Initialize proofIncident to null
+    incidentReportFilename: ''
 });
 
 const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -87,47 +91,79 @@ useEffect(() => {
   }
 }, [data]);
 
-const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>, uploadHandler: (file: File, userID: string) => Promise<void>) => {
+const handleFileChange = async (
+  event: React.ChangeEvent<HTMLInputElement>,
+  uploadHandler: (file: File, userID: string) => Promise<string | null>
+) => {
   const file = event.target.files?.[0];
 
-  //no file
+  // No file selected
   if (!file) return;
 
-
-  //no user login
+  // User not logged in
   if (!userID) {
-    alert("You are not logged in! Please log in first before uploading files.");
+    alert('You are not logged in! Please log in first before uploading files.');
     return;
   }
 
-  // File type checker
-  if (file.type !== "application/pdf") {
-    alert("Please upload only PDF files.");
-      return;
-  } else {
-    try {
-      await uploadHandler(file, userID);
+  // Check file type
+  if (file.type !== 'application/pdf') {
+    alert('Please upload only PDF files.');
+    return;
+  }
+
+  try {
+    // Upload file and get the filename
+    const newFilename = await uploadHandler(file, userID);
+
+    if (newFilename) {
+      setFormData((prevData) => ({
+        ...prevData,
+        incidentReportFilename: newFilename, // Update form data with the filename
+      }));
       isValidFileType = true;
-    } catch (error) {
-      console.error("File Upload Failed:", error);
     }
+  } catch (error) {
+    console.error('File Upload Failed:', error);
   }
 };
 
 
-const handleSubmit = async (e:any) => {
-    console.log("submitting..")
-    e.preventDefault();
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      alert('Please enter a valid email address.');
-      return;
-    }
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    const hasProof = formData.proofIncident !== null;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(formData.email)) {
+    alert('Please enter a valid email address.');
+    return;
+  }
 
-    const { error } = await supabase.from('incidentform').insert(formData);
+  if (!isValidFileType) {
+    alert('Please upload a valid PDF file.');
+    return;
+  }
+
+  const { error } = await supabase
+    .from('incidentform')
+    .insert([{ ...formData }]);
+
+  if (error) {
+    console.error('Error inserting data:', error);
+  } else {
+    alert('Incident report submitted successfully');
+    setFormData({
+      name: '',
+      studentnum: '',
+      degreeProg: '',
+      email: '',
+      eq_name: '',
+      eq_code: '',
+      date_incident: '',
+      time_incident: '',
+      description: '',
+      adviser: '',
+      incidentReportFilename: '',
         // .insert([{
         //     name: formData.name,
         //     studentnum: formData.studentnum,
@@ -140,29 +176,12 @@ const handleSubmit = async (e:any) => {
         //     description: formData.description,
         //     adviser: formData.adviser,
         //     proofIncident: null, // Set proofIncident to null
-        //     hasProof: hasProof // Set hasProof based on whether proofIncident is present
+        //     incidentReportFilename: formData.incidentReportFileName
         // }]);
-
-    if (error || isValidFileType==false) {
-        console.error('Error inserting data:', error);
-    } else {
-        alert('Incident report submitted successfully');
-        // Optionally, you can reset the form after successful submission
-        setFormData({
-            name: '',
-            studentnum: '',
-            degreeProg: '',
-            email: '',
-            eq_name: '',
-            eq_code: '',
-            date_incident: '',
-            time_incident: '',
-            description: '',
-            adviser: '',
-            proofIncident: undefined // Reset proofIncident to null
-        });
-    }
+    });
+  }
 };
+
 
     return ( 
         <div className="overflow-x-hidden max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:pt-20">
@@ -330,8 +349,6 @@ const handleSubmit = async (e:any) => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     id="picture-incident"
                     type="file"
-                    name='proofIncident'
-                    value = {formData.proofIncident}
                     onChange={(event) => handleFileChange(event, handleFileUpload_Incident)}
                   />
                 </div>

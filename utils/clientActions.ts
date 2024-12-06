@@ -1,12 +1,14 @@
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 /*
+DEC 7 2024 PATCH NOTES:
+- incident upload handler now returns the new filname to allow external use to be passed to any database table as text
+
 DEC 6 2024 PATCH NOTES:
 - Added restriction to accept only pdf files
 - Renaming of uploaded files to match userid
 - Overwrites the old file in the existing folder (for attendance & Form 5 only)
 - Added filename format [UID]_[pdfType]_[?Increment].pdf
 - Incremental upload filename for Incident Reports
-
 
 LINKED FILES:
 - page.tsx of verification
@@ -65,35 +67,37 @@ export async function handleFileUpload_Attendance(file: File, userID: string): P
 
 // Upload handler for Incident files
 //WARNING: Incident files MUST NOT use upsert.
-export async function handleFileUpload_Incident(file: File, userID: string): Promise<void> {
-  if(userID) {
-    try { 
-      const existingFiles = await checkFileExists (userID, 'Incident');
+export async function handleFileUpload_Incident(file: File, userID: string): Promise<string | null> {
+  if (userID) {
+    try {
+      const existingFiles = await checkFileExists(userID, 'Incident');
+      let fileIndex = existingFiles?.length || 0;
 
-      //number of existing files
-      let fileIndex = existingFiles?.length || 0;    
+      // Generate the new filename
+      const newFilename = `${userID}_Incident_${fileIndex + 1}.pdf`;
+      const fileRenamed = new File([file], newFilename, { type: file.type });
 
-      //Upload new Incident Report File with incremental counter
-      const fileRenamed = new File([file], `${userID}_Incident_${fileIndex + 1}.pdf`, {type: file.type});
       const { data, error } = await supabase.storage
         .from('Incident')
-        .upload(`${fileRenamed.name}`, fileRenamed);
+        .upload(newFilename, fileRenamed);
 
       if (error) {
         console.error('Upload error (Incident):', error);
+        return null;
       } else {
         console.log('Upload successful (Incident):', data);
+        return newFilename; // Return the new filename
       }
-    } 
-
-    catch (error) {
+    } catch (error) {
       console.error('Error handling file upload', error);
+      return null;
     }
-
   } else {
-    alert("You are not logged in! Please log in first before uploading files.");
-  } 
+    alert('You are not logged in! Please log in first before uploading files.');
+    return null;
+  }
 }
+
 
 //Existing File Checker : For Incident Reports
 export async function checkFileExists (userID: string, location: string){
@@ -113,26 +117,23 @@ export async function checkFileExists (userID: string, location: string){
 
 
 //----------function for fetching pdf url function-----------//
-export async function fetchBucketURL_Public(fileOrFileName: File | string): Promise<string | null> {
-  let filePath: string;
+//search in multiple buckets
+export async function searchFileInBuckets(filename: string): Promise<string | null> {
+  const buckets = ['Attendance', 'Form_5', 'Incident']
+  for (const bucket of buckets) {
+    const { data, error } = await supabase.storage.from(bucket).list('', { search: filename });
 
+    if (error) {
+      console.error(`Error fetching files from bucket "${bucket}":`, error.message);
+      continue;
+    }
 
-  if (typeof fileOrFileName === 'string') {
-    filePath = fileOrFileName.toLowerCase(); 
-  } else {
-    filePath = fileOrFileName.name.toLowerCase(); 
+    if (data?.some(file => file.name === filename)) {
+      // Construct and return the public URL if the file is found
+      return supabase.storage.from(bucket).getPublicUrl(filename).data.publicUrl;
+    }
   }
 
-  const { data } = supabase.storage
-    .from('Attendance') 
-    .getPublicUrl(filePath);
-
-  if (!data || !data.publicUrl) {
-    console.error('Failed to fetch public URL for:', filePath);
-    return null;
-  }
-
-  console.log('PDF URL Fetched:', data.publicUrl);
-  return data.publicUrl;
+  // Return null if the file is not found in any bucket
+  return null;
 }
-

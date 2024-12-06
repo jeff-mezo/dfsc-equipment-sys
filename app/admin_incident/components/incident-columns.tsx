@@ -1,3 +1,23 @@
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/*
+DEC 7 2024 PATCH NOTES:
+- Replaced database cell hasProof to incidentReportFilename to allow searching in PDF viewer
+- Replaced Incident Proof Label to Incedent Report Filename 
+
+LINKED FILES:
+- clientActions.ts
+- useUser.tsx
+- incedent-data-table.tsx
+
+WARNINGS:
+- none
+
+- Previous updates dev: interstellar-0614 (Jamze Reyno)
+- Current updates dev: KanadeTachie (King Behimino)
+
+^^^Change as necessary to track progress
+*/ 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 "use client"
 import { Button } from "@/components/ui/button"
     
@@ -28,7 +48,7 @@ export type Incident = {
   time_incident: string;
   description: string;
   adviser: string;
-  hasProof: boolean;
+  incidentReportFilename: string;
   degreeProg: string;
   email: string;
   eq_name: string;
@@ -82,8 +102,8 @@ export const incident_columns: ColumnDef<Incident>[] = [
       header: "Adviser",
   },
   {
-      accessorKey: "hasProof",
-      header: "Proof",
+      accessorKey: "incidentReportFilename",
+      header: "Incident Report Filename",
   },
   {
       accessorKey: "degreeProg",
