@@ -1,17 +1,41 @@
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/*
+DEC 6 2024 PATCH NOTES:
+- Added restriction to accept only pdf files
+- Added checks if the user is logged in
+- Added user session fetch to find userID currently logged in
+- Added global variable isValidFileType for handleSubmit logic for incorrect file type
+
+
+LINKED FILES:
+- clientActions.ts
+- useUser.tsx
+
+WARNINGS:
+- none
+
+- Previous updates dev: interstellar-0614 (Jamze Reyno)
+- Current updates dev: KanadeTachie (King Behimino)
+
+^^^Change as necessary to track progress
+*/ 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 'use client' 
 import React from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Textarea } from "@/components/ui/textarea"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client'
 import { ChangeEvent } from 'react';
 import { supabase } from '@/config/supabaseClient'
 import { handleFileUpload_Incident } from '@/utils/clientActions'
-import * as pdfjsLib from 'pdfjs-dist';
+//import * as pdfjsLib from 'pdfjs-dist';
+import useUser from '@/app/hook/useUser';
 
-
+var isValidFileType = false;
 const incident = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -53,10 +77,40 @@ const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
   }));
 };
 
-const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>, uploadHandler: (file: File) => Promise<void>) => {
+const [userID, setUserId] = useState<string | null>(null)
+const { isFetching, data } = useUser();
+
+//fetching userid of current user login. UID parsed to string and passed as filename for pdf
+useEffect(() => {
+  if (data && data.id) {
+    setUserId(data.id);
+  }
+}, [data]);
+
+const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>, uploadHandler: (file: File, userID: string) => Promise<void>) => {
   const file = event.target.files?.[0];
-  if (file) {
-    await uploadHandler(file);
+
+  //no file
+  if (!file) return;
+
+
+  //no user login
+  if (!userID) {
+    alert("You are not logged in! Please log in first before uploading files.");
+    return;
+  }
+
+  // File type checker
+  if (file.type !== "application/pdf") {
+    alert("Please upload only PDF files.");
+      return;
+  } else {
+    try {
+      await uploadHandler(file, userID);
+      isValidFileType = true;
+    } catch (error) {
+      console.error("File Upload Failed:", error);
+    }
   }
 };
 
@@ -89,7 +143,7 @@ const handleSubmit = async (e:any) => {
         //     hasProof: hasProof // Set hasProof based on whether proofIncident is present
         // }]);
 
-    if (error) {
+    if (error || isValidFileType==false) {
         console.error('Error inserting data:', error);
     } else {
         alert('Incident report submitted successfully');

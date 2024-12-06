@@ -1,8 +1,22 @@
-//!!!!!!!!!!!!!!!!!!!!! WARNING : THIS PAGE IS NOT FINAL FOR PDF VIEWING - NO FRONTEND HAS BEEN DEVELOPED YET AS OF NOVEMBER 19, 2024!!!!!!!!!!!!!!!!!!!!!!!!
-//!!!!!!!!!!!!!!!!!!!!! ALL BUCKET STORAGES ARE SET TO PUBLIC !!!!!!!!!!!!!!!!!!!!!!!!
-//!!!!!!!!!!!!!!!!!!!!! WHEN THE ADMIN/USER WANTS TO VIEW A PDF, IT SHOULD DIRECT HERE WITH THEIR NAMES ALREADY SET AUTOMATICALLY UPON QUERY.!!!!!!!!!!!!!!!!!!!!!!!!
-//!!!!!!!!!!!!!!!!!!!!! PAGE SHOULD NOT ASK FOR INPUT FROM USER/ADMIN !!!!!!!!!!!!!!!!!!!!!!!!
-//!!!!!!!!!!!!!!!!!!!!! Test Usage: [filename] + .pdf (CASE SENSITIVE) !!!!!!!!!!!!!!!!!!!!!!!!
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/*
+DEC 6 2024 PATCH NOTES:
+
+LINKED FILES:
+
+
+WARNINGS:
+- This page is NOT FINAL for pdf viewing - No frontend has been developed yet as of November 19, 2024
+- When the user/admin wants to view a pdf, IT SHOULD redirect here with their current userID as the file name upon query
+- Final page MUST NOT ask for input from the user/admin. Queryt must be automatic
+
+- Previous updates dev: KanadeTachie (King Behimino)
+- Current updates dev: KanadeTachie (King Behimino)
+
+^^^Change as necessary to track progress
+*/ 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 'use client'
 import React, { useState } from 'react';
 import { fetchBucketURL_Public } from '@/utils/clientActions';
