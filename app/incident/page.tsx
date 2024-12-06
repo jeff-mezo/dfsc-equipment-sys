@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Textarea } from "@/components/ui/textarea"
-import useIncident from '@/app/hook/useIncident'
 import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client'
 import { ChangeEvent } from 'react';
@@ -28,10 +27,30 @@ const incident = () => {
     proofIncident: undefined // Initialize proofIncident to null
 });
 
-const handleChange = (e:any) => {
+const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
   const { name, value } = e.target;
-  const newValue = name === 'file' ? e.target.files[0] : value;
-  setFormData({ ...formData, [name]: newValue });
+
+  const lettersFields = ['name', 'degreeProg', 'eq_name', 'adviser'];
+  const charactersRegex = /^[A-Za-z\s\-./]*$/;
+
+  const studentNumberRegex = /^[0-9\-]*$/; 
+
+  // Validation logic
+  if (lettersFields.includes(name)) {
+    if (!charactersRegex.test(value)) {
+      return; // Ignore invalid input
+    }
+  } else if (name === 'studentnum') {
+    if (!studentNumberRegex.test(value)) {
+      return; // Ignore invalid input
+    }
+  }
+
+  // Update formData state
+  setFormData((prevData) => ({
+    ...prevData,
+    [name]: value,
+  }));
 };
 
 const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>, uploadHandler: (file: File) => Promise<void>) => {
@@ -45,6 +64,12 @@ const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>, uplo
 const handleSubmit = async (e:any) => {
     console.log("submitting..")
     e.preventDefault();
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
 
     const hasProof = formData.proofIncident !== null;
 
@@ -154,7 +179,7 @@ const handleSubmit = async (e:any) => {
                   <Input
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     id="email"
-                    type="text"
+                    type="email"
                     name='email'
                     value={formData.email}
                     onChange={handleChange}

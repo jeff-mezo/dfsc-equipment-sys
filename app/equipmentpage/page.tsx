@@ -103,24 +103,24 @@ const Dashboard = () => {
   // }, [])
 
   const handleSearchState = async (searchQuery: string) => {
-    console.log(searchQuery)
-    if(searchQuery) {
+    if (searchQuery) {
       const { data, error } = await supabase
         .from('equipments')
         .select()
-        .textSearch('name', searchQuery, {
-          type: 'websearch',
-          config: 'english',
-        })
-        if (fetchError) {
-          setFetchError(error? error.message : null);
-          setEquipment(null);
-        } else {
-          setEquipment(data as Equipment[]); // Cast data to Equipment[]
-        }
-
+        .ilike('name', `%${searchQuery}%`); // Use ilike for case-insensitive matching
+      
+      if (error) {
+        setFetchError(error.message);
+        setEquipment(null);
+      } else {
+        setEquipment(data as Equipment[]); // Cast data to Equipment[]
+      }
+    } else {
+      // If search query is empty, fetch all equipment again
+      fetchEquipment();
     }
-  }
+  };
+  
 
   const debouncedSearch = useCallback(
     debounce((searchQuery: string) => {
@@ -148,11 +148,11 @@ const Dashboard = () => {
   
 
   return (
-    <div className='pt-20'>
+    <div className=''>
 
       <div className='px-10 flex flex-wrap justify-center lg:justify-start lg:w-9/12 mx-auto'>
           
-        <div className='flex flex-row w-full mx-auto px-5 justify-between'>
+        <div className='top-20 mx-auto my-8 z-999 flex flex-row px-5 justify-between  bg-white h-16 w-screen  '>
           <div className='flex flex-row'>
 
             {/* <Search /> */}
