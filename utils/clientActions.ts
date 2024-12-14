@@ -1,14 +1,10 @@
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 /*
+DEC 14 2024 PATCH NOTES:
+- Added fetchReservation function for calendar
+
 DEC 7 2024 PATCH NOTES:
 - incident upload handler now returns the new filname to allow external use to be passed to any database table as text
-
-DEC 6 2024 PATCH NOTES:
-- Added restriction to accept only pdf files
-- Renaming of uploaded files to match userid
-- Overwrites the old file in the existing folder (for attendance & Form 5 only)
-- Added filename format [UID]_[pdfType]_[?Increment].pdf
-- Incremental upload filename for Incident Reports
 
 LINKED FILES:
 - page.tsx of verification
@@ -16,6 +12,8 @@ LINKED FILES:
 
 WARNINGS:
 - All buckets are public
+- Calendar is very much rushed. New designs must be available in the future
+- Calendar only displays
 
 - Previous updates dev: KanadeTachie (King Behimino)
 - Current updates dev: KanadeTachie (King Behimino)
@@ -137,3 +135,25 @@ export async function searchFileInBuckets(filename: string): Promise<string | nu
   // Return null if the file is not found in any bucket
   return null;
 }
+
+//----------function for fetching reservations for calendar-----------//
+
+export async function fetchReservations() {
+  const { data, error } = await supabase
+    .from('cart_items')
+    .select('id, eqname, borrow_date, return_date');
+  if (error) {
+    console.error('Error fetching reservations:', error);
+    return [];
+  }
+
+  return data.map((reservation) => ({
+    id: reservation.id.toString(),
+    title: reservation.eqname,
+    start: new Date(reservation.borrow_date).toISOString(),
+    end: reservation.return_date
+      ? new Date(reservation.return_date).toISOString()
+      : undefined,
+  }));
+}
+

@@ -1,5 +1,8 @@
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 /*
+DEC 14 2024 PATCH NOTES:
+- Added ENTER key event listener
+
 DEC 7 2024 PATCH NOTES:
 - Added some frontend. Still need better frontend functions
 - Added usage manual 
@@ -26,8 +29,6 @@ import useUser from '@/app/hook/useUser';
 import { SearchIcon } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 
-
-
 const PdfSearchViewer: React.FC = () => {
   const [fileName, setFileName] = useState<string>(''); //input filename
   const [pdfUrl, setPdfUrl] = useState<string | null>(null); // fetched url storage
@@ -35,7 +36,7 @@ const PdfSearchViewer: React.FC = () => {
   const [userID, setUserId] = useState<string | null>(null)
   const { isFetching, data } = useUser();
 
-//fetching userid of current user login. UID parsed to string and passed as filename for pdf
+  //fetching userid of current user login. UID parsed to string and passed as filename for pdf
   useEffect(() => {
     if (data && data.id) {
       setUserId(data.id);
@@ -60,7 +61,12 @@ const PdfSearchViewer: React.FC = () => {
       }
     })
   .catch(err => console.error('Error searching for file:', err));
+  };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch(); 
+    }
   };
 
   return (
@@ -68,7 +74,6 @@ const PdfSearchViewer: React.FC = () => {
        <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Documents Viewer</h1>
             <p className="mt-1 text-md text-gray-600 dark:text-gray-400">
                 View uploaded documents from you, or other users (admin only).
-                
             </p>
             
       <div>
@@ -80,10 +85,10 @@ const PdfSearchViewer: React.FC = () => {
                   type="text"
                   value={fileName}
                   onChange={(e) => setFileName(e.target.value)}
-
+                  onKeyDown={handleKeyDown} 
               />
             </div>
-        <button onClick={handleSearch}>Search</button>
+        <button onClick={handleSearch}><b>Search</b></button>
       </div>
       <p className="mt-1 text-md text-gray-600 dark:text-gray-400">
         <b>Usage:</b> [yourUserID]_[Attendance/Form_5]
