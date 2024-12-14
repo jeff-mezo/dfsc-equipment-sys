@@ -9,9 +9,11 @@ import { useQueryClient } from '@tanstack/react-query'
 import { ClipboardCheckIcon, ClipboardX, Trash } from 'lucide-react'
 import CartContext, { CartItem, Cart } from "@/app/equipmentpage/cartContext";
 import { supabase } from '@/config/supabaseClient'
+import { useRouter } from 'next/navigation'
 
-// type itemType = {
+// type CartItem = {
 //   id: string;
+//   eq_id: string;
 //   name: string;
 //   image: string;
 //   stock: number;
@@ -25,12 +27,16 @@ const Reservation: React.FC = () => {
 
   const { isFetching, data } = useUser();
   const queryClient = useQueryClient();
+  const router = useRouter();
 
-  const { addItemToCart, deleteItemFromCart, cart } = useContext(CartContext);
+
+  // CART DATA
+  const { addItemToCart, deleteItemFromCart, cart, clearCart } = useContext(CartContext);
 
   const increaseQty = (cartItem: CartItem) => {
     const newQty = cartItem?.quantity + 1;
     const item = { ...cartItem, quantity: newQty };
+    console.log("increaseQty: ", item);
 
     if (newQty > Number(cartItem.stock)) return;
 
@@ -40,21 +46,13 @@ const Reservation: React.FC = () => {
   const decreaseQty = (cartItem: CartItem) => {
     const newQty = cartItem?.quantity - 1;
     const item = { ...cartItem, quantity: newQty };
+    console.log("decreaseQty: ", item);
 
     if (newQty <= 0) return;
 
     addItemToCart(item);
   };
 
-  //console.log("1 item in the cart: ", cart)
-
-  // const [formData, setFormData] = useState<FormData>({
-  //   name: '',
-  //   studentNumber: '',
-  //   degreeProgram: '',
-  //   project: '',
-  //   adviser: '',
-  // });
 
   const [name, setName] = useState('');
   const [studno, setStudNo] = useState('');
@@ -62,7 +60,9 @@ const Reservation: React.FC = () => {
   const [project, setProject] = useState('');
   const [adviser, setAdviser] = useState('');
   const [error, setError] = useState<string | null>(null);
+
   // input values from session:
+
   useEffect(() => {
     if(data) {
         // if (!data) throw new Error('No user logged in');
@@ -75,17 +75,21 @@ const Reservation: React.FC = () => {
     } else if(error) {
         setError(error);
     }
-}, [data]);
+  }, [data]);
 
-  const [cartData, setCartData] = useState(cart.cartItems.map((item) => ({
-    ...item,
-  })))
+  // const [cartData, setCartData] = useState(cart.cartItems.map((item) => ({...item,})))
+
+  const [cartData, setCartData] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    setCartData(cart.cartItems.map((item) => ({...item,})));
+  }, [cart.cartItems]);
 
   //BORROW AND RETURN DATE ATTEMPT
   const [borrowDate, setBorrowDate] = useState('')
   const [returnDate, setReturnDate] = useState('')
 
-  useEffect
+  // useEffect
   
   //console.log("item in the cart: ", cart)
   
@@ -94,6 +98,11 @@ const Reservation: React.FC = () => {
     newCartData[index][field] = value
     setCartData(newCartData)
   }
+
+  // BYEBYE CART
+  // const clearCart = () => {
+  //   setCart({ ...cart, cartItems: [] }); // Assuming your cart state is managed like this
+  // };
   
   // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   const { id, value } = e.target;
@@ -104,6 +113,7 @@ const Reservation: React.FC = () => {
   // };
 
   const handleSubmit = async () => {
+
     try {
       console.log("submitting...")
 
@@ -119,7 +129,9 @@ const Reservation: React.FC = () => {
 
       
       // Insert borrower data
-      const { data: borrowerData, error: borrowerError } = await supabase.from('reservationform').insert([reservationform]).select();
+      const { data: borrowerData, error: borrowerError } = await 
+        supabase.from('reservationform')
+        .insert([reservationform]).select();
       
       if (borrowerError) throw borrowerError;
       
@@ -143,17 +155,61 @@ const Reservation: React.FC = () => {
       console.log('cart: ', cartItems)
 
       // Insert cart items data
-      const { data: cartItemsData, error: cartItemsError } = await supabase.from('cart_items').insert(cartItems);
-      console.log('cart: ', cartItemsData)
+      const { data: cartItemsData, error: cartItemsError } = await 
+        supabase.from('cart_items')
+        .insert(cartItems);
+
+      // Reduce equipments quantity
+      for (const item of cartItems) {
+        console.log('retrieving stock...');
+        const { data: inventoryData, error: inventoryError } = await supabase 
+          .from('equipments')
+          .select('stock')
+          .eq('id', item.eq_id)
+          .single();
+
+        if(inventoryError) throw inventoryError;
+
+        const currentStock = inventoryData.stock;
+
+        // calculate new stock
+        const newStock = currentStock - item.quantity;
+
+        console.log('updating stock...');
+        // update stock
+        const { error : updateError } = await supabase
+          .from('equipments')
+          .update({ stock: newStock })
+          .eq('id', item.eq_id);
+        
+        if(updateError) throw updateError; 
+      }
+
+      console.log('cart: ', cartItemsData);
+
+
       if (cartItemsError) throw cartItemsError;
 
-      // // Handle success (e.g., show a success message or redirect)
-      // console.log('Checkout successful', { borrowerData, cartItemsData });
+      console.log('clearing cart...');
+      // clear cart in local storage
+      clearCart();
+
+      // redirect to profile
+      router.push("/profile");
+
+
     } catch (error) {
       // Handle error (e.g., show an error message)
       console.error('Checkout failed', error);
     }
   };
+
+  // const qtyCheck1 = () => {
+  //   console.log(cartData);
+  // }
+  // const qtyCheck2 = () => {
+  //   console.log(cart.cartItems);
+  // }
 
   
 
@@ -167,6 +223,12 @@ const Reservation: React.FC = () => {
           <p className="mt-2 text-md text-gray-600 dark:text-gray-400">
             Review your cart and complete your rental order.
           </p>
+          {/* <Button onClick={qtyCheck1}>
+            Check CartData
+          </Button>
+          <Button onClick={qtyCheck2}>
+            Check Cart.CartItem
+          </Button> */}
         </div>
         <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
           <div className="px-4 py-5 sm:px-6">
@@ -356,3 +418,7 @@ const Reservation: React.FC = () => {
 }
 
 export default Reservation
+
+function redirectPath() {
+  throw new Error('Function not implemented.')
+}

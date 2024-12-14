@@ -45,12 +45,6 @@ export async function deleteEquipment(id:string) {
     revalidatePath("/admin")
 }
 
-export async function deleteIncident(id:number) {
-    const supbase = await createClient()
-    await supbase.from('incidentform').delete().eq("id", id)
-    revalidatePath("/admin")
-}
-
 export async function verifyUser(id:string, isVerified:boolean, data:any) {
     // const { isFetching, data } = useUser();
     // const queryClient = useQueryClient();
@@ -68,6 +62,9 @@ export async function verifyUser(id:string, isVerified:boolean, data:any) {
     revalidatePath("/admin")
     return JSON.stringify(result)
 }
+
+
+
 
 
 

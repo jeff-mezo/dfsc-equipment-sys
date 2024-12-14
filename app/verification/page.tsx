@@ -1,3 +1,24 @@
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/*
+DEC 6 2024 PATCH NOTES:
+- Added restriction to accept only pdf files
+- Added checks if the user is logged in
+- Added user session fetch to find userID currently logged in
+
+LINKED FILES:
+- clientActions.ts
+- useUser.tsx
+
+WARNINGS:
+- Replaces old files
+
+- Previous updates dev: jeff-mezo (Jeffer Mezo)
+- Current updates dev: KanadeTachie (King Behimino)
+
+^^^Change as necessary to track progress
+*/ 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 "use client"
 import React from 'react'
 import { Input } from '@/components/ui/input'
@@ -6,6 +27,10 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Bell } from 'lucide-react'
 import { handleFileUpload_Form5, handleFileUpload_Attendance } from '@/utils/clientActions'
+import { useEffect, useState } from "react";
+import { supabase } from '@/config/supabaseClient';
+import useUser from '@/app/hook/useUser';
+
 
 import {
   Alert,
@@ -14,11 +39,40 @@ import {
 } from "@/components/ui/alert"
 
 const verification = () => {
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>, uploadHandler: (file: File) => Promise<void>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      await uploadHandler(file);
+  const [userID, setUserId] = useState<string | null>(null)
+  const { isFetching, data } = useUser();
+
+  //fetching userid of current user login. UID parsed to string and passed as filename for pdf
+  useEffect(() => {
+    if (data && data.id) {
+      setUserId(data.id);
     }
+  }, [data]);
+  
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>, uploadHandler: (file: File, userID: string) => Promise<void>) => {
+    const file = event.target.files?.[0];
+
+    //no file
+    if (!file) return;
+
+    //no user login
+    if (!userID) {
+      alert("You are not logged in! Please log in first before uploading files.");
+      return;
+    }
+
+    // File type checker
+    if (file.type !== "application/pdf") {
+      alert("Please upload only PDF files.");
+        return;
+    } else {
+      try {
+        await uploadHandler(file, userID);
+      } catch (error) {
+        console.error("File Upload Failed:", error);
+      }
+    }
+
   };
 
   return ( 

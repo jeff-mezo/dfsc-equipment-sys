@@ -215,7 +215,11 @@ const profile = () => {
                                             name="name"
                                             type="text"
                                             value={name}
-                                            onChange={(e) => setName(e.target.value)}
+                                            onChange={(e) => { const regex = /^[a-zA-Z.\- ]*$/; 
+                                            if (regex.test(e.target.value)) {
+                                                setName(e.target.value); 
+                                            }
+                                        }}
                                         />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
@@ -237,17 +241,27 @@ const profile = () => {
                                             name="contactNum"
                                             type="text"
                                             value={contactNum}
-                                            onChange={(e) => setContactNum(e.target.value)}
+                                            onChange={(e) => {
+                                                const regex = /^[0-9\-]*$/; 
+                                                if (regex.test(e.target.value)) {
+                                                    setContactNum(e.target.value); 
+                                                }
+                                            }}
                                         />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="age" className="text-right">
                                         Age
                                         </Label>
-                                        <Input id="" type="number" className="col-span-3 border-black"
+                                        <Input id="" type="text" className="col-span-3 border-black"
                                             name="age"
                                             value={age}
-                                            onChange={(e) => setAge(e.target.value)}
+                                            onChange={(e) => {
+                                                const regex = /^[0-9\-]*$/; 
+                                                if (regex.test(e.target.value)) {
+                                                    setAge(e.target.value); 
+                                                }
+                                            }}
                                         />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">

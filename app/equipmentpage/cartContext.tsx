@@ -22,31 +22,42 @@ interface CartContextType {
   cart: Cart;
   addItemToCart: (item: CartItem) => void;
   deleteItemFromCart: (id: string) => void;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType>({
   cart: { cartItems: [] },
   addItemToCart: () => {},
   deleteItemFromCart: () => {},
+  clearCart: () => {},
 });
+
+
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<Cart>({ cartItems: [] });
 
   const router = useRouter();
 
+  
   useEffect(() => {
     setCartToState();
   }, []);
-
+  
   const setCartToState = () => {
     setCart(
       localStorage.getItem("cart")
-        ? JSON.parse(localStorage.getItem("cart") as string)
-        : { cartItems: [] }
+      ? JSON.parse(localStorage.getItem("cart") as string)
+      : { cartItems: [] }
     );
   };
 
+  // when user checks out
+  const clearCart = () => {
+    localStorage.removeItem("");
+    setCart({cartItems: []});
+  };
+  
   const addItemToCart = ({
     id,
     eq_id,
@@ -57,7 +68,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     borrowDate,
     returnDate,
   }: CartItem) => {
-
+    
+  
     
     const item: CartItem = {
       id,
@@ -100,6 +112,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         cart,
         addItemToCart,
         deleteItemFromCart,
+        clearCart,
       }}
     >
       {children}
