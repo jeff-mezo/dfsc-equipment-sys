@@ -159,9 +159,38 @@ const Reservation: React.FC = () => {
         supabase.from('cart_items')
         .insert(cartItems);
 
-      console.log('cart: ', cartItemsData)
+      // Reduce equipments quantity
+      for (const item of cartItems) {
+        console.log('retrieving stock...');
+        const { data: inventoryData, error: inventoryError } = await supabase 
+          .from('equipments')
+          .select('stock')
+          .eq('id', item.eq_id)
+          .single();
+
+        if(inventoryError) throw inventoryError;
+
+        const currentStock = inventoryData.stock;
+
+        // calculate new stock
+        const newStock = currentStock - item.quantity;
+
+        console.log('updating stock...');
+        // update stock
+        const { error : updateError } = await supabase
+          .from('equipments')
+          .update({ stock: newStock })
+          .eq('id', item.eq_id);
+        
+        if(updateError) throw updateError; 
+      }
+
+      console.log('cart: ', cartItemsData);
+
+
       if (cartItemsError) throw cartItemsError;
 
+      console.log('clearing cart...');
       // clear cart in local storage
       clearCart();
 

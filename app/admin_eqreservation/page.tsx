@@ -125,6 +125,55 @@ export default function EquipmentReservation() {
     try {
       console.log("deleting reservation items");
 
+      // UPDATE STOCK - add cart item quanitities back to stocks :
+
+      // retrieve reserved items
+      const { data : reservedItems, error : fetchError} = await supabase
+        .from('cart_items')
+        .select('eq_id, quantity')
+        .eq('reservation_id', reservationId);
+
+      if(fetchError) {
+        console.error('Error fetching reserved items');
+        return;
+      }
+
+      console.log("updating reservation items");
+
+
+      if (reservedItems) {
+        console.log("update underway...");
+        // update stock for each reserved items
+        for (const item of reservedItems) {
+          const { data: inventoryData , error: inventoryError} = await supabase 
+            .from('equipments')
+            .select('stock')
+            .eq('id', item.eq_id)
+            .single();
+
+          if (!inventoryData || inventoryError) {
+            console.error('Error fetching inventory data ', inventoryError);
+            continue;
+          }
+
+          const currentStock = inventoryData.stock;
+          const newStock = currentStock + item.quantity;
+
+          const { error: updateError } = await supabase
+            .from('equipments')
+            .update({stock: newStock})
+            .eq('id', item.eq_id);
+
+            if (updateError) {          
+              console.error('Error updating stock:', updateError);        
+            } else {          
+              console.log(`Stock updated for item ID: ${item.eq_id}`);        
+            }
+        }
+      }
+
+      // DELETION :
+
       const result_cart = await supabase
         .from('cart_items')
         .delete()
