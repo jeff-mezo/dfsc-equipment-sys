@@ -331,7 +331,7 @@ export default function EquipmentReservation() {
                                 : 'destructive'
                             }
                           >
-                            {reservation.status === 'accepted' ? 'accepted' : 'pending'}
+                            {reservation.status.charAt(0).toUpperCase() + reservation.status.slice(1)}
                           </Badge>
 
                         </div>
