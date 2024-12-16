@@ -10,6 +10,8 @@ import { ClipboardCheckIcon, ClipboardX, Trash } from 'lucide-react'
 import CartContext, { CartItem, Cart } from "@/app/equipmentpage/cartContext";
 import { supabase } from '@/config/supabaseClient'
 import { useRouter } from 'next/navigation'
+import { toast } from "@/components/ui/use-toast"
+
 
 // type CartItem = {
 //   id: string;
@@ -111,8 +113,63 @@ const Reservation: React.FC = () => {
   //     [id]: value,
   //   }));
   // };
-
   const handleSubmit = async () => {
+    const lettersOnlyRegex = /^[a-zA-Z\s]+$/;
+    const lettersWithDotRegex = /^[a-zA-Z\s.]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (cart.cartItems.length === 0) {
+      toast({
+        title: "No Equipment in Cart",
+        description: "Please add at least one equipment to your cart before submitting the form.",
+        variant: "destructive", 
+        duration: 5000, 
+      });
+      return; 
+    }
+
+    if (!name || !studno || !degree || !project || !adviser || !borrowDate || !returnDate) {
+      toast({
+        title: "Form Incomplete",
+        description: "Please fill in all the required fields before submitting.",
+        variant: "destructive", 
+        duration: 5000, 
+      });
+      return; 
+    }
+    
+  
+    if (!(lettersWithDotRegex.test(name) && lettersWithDotRegex.test(adviser))) {
+      toast({
+        title: "Invalid Input",
+        description: "Name and Adviser must only contain letters, spaces, and periods.",
+        variant: "destructive",
+        duration: 5000,
+      });
+      return;
+    }
+  
+    // Validation for degree and project
+    if (!(lettersOnlyRegex.test(project) && lettersOnlyRegex.test(degree))) {
+      toast({
+        title: "Invalid Input",
+        description: "Project and Degree must only contain letters and spaces.",
+        variant: "destructive",
+        duration: 5000,
+      });
+      return;
+    }
+
+    if (!emailRegex.test(studno)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+        duration: 5000,
+      });
+      return;
+    }
+  
 
     try {
       console.log("submitting...")
@@ -195,11 +252,13 @@ const Reservation: React.FC = () => {
       clearCart();
 
       // redirect to profile
-      router.push("/profile");
-
-
+      toast({
+        title: "Form Complete",
+        description: "Reservation Form submitted successfully!",
+        duration: 2000, 
+      });
+      router.push("/monitor_reservation");
     } catch (error) {
-      // Handle error (e.g., show an error message)
       console.error('Checkout failed', error);
     }
   };
