@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from '../components/navbar'
+// import Header from '../components/navbar'
 import QueryProvider from "@/components/query-provider";
 import { GlobalProvider } from "./GlobalProvider";
 import { Toaster } from "@/components/ui/toaster";
@@ -23,7 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <GlobalProvider>
           <QueryProvider>
-            <Header />
+            {/* <Header /> */}
             {children}
           </QueryProvider>
         </GlobalProvider>
