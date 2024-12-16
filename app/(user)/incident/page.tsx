@@ -184,7 +184,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 
     return ( 
-        <div className="overflow-x-hidden max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:pt-20">
+        <div className="overflow-x-hidden max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 ">
             <div className="space-y-8 pt-10">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Incident Report</h1>

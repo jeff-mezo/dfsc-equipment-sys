@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { CartProvider } from '@/app/equipmentpage/cartContext';
+import { CartProvider } from '@/app/(user)/equipmentpage/cartContext';
 
 interface GlobalProviderProps {
     children: ReactNode;

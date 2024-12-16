@@ -38,6 +38,9 @@ const Header = () => {
             <h1>DFSC Equipment Reservation System</h1>  
         </Link>
         <div className='flex flex-row'>
+        <Link href="/monitor_reservation" className='mx-2'>
+                <Button className=" text-black hover:bg-[#9B151E]/90 hover:text-white" variant="outline" size="sm">Reservations</Button>
+            </Link>
             <Link href="/calendar" className='mx-2'>
                 <Button className="bg-[#9B151E] hover:bg-[#9B151E]/90 text-white " size="sm">Calendar</Button>
             </Link>

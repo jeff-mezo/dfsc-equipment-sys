@@ -3,7 +3,7 @@
 import React, { useContext } from 'react'
 import { Button } from "@/components/ui/button"
 
-import CartContext from "@/app/equipmentpage/cartContext"
+import CartContext from "@/app/(user)/equipmentpage/cartContext"
 
 export interface Equipment {
   img: string;

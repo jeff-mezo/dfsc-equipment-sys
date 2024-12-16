@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useEffect, useState } from "react";
-import { CartItem } from "@/app/equipmentpage/cartContext";
+import { CartItem } from "@/app/(user)/equipmentpage/cartContext";
 import { getCoreRowModel, createTable } from '@tanstack/react-table';
 
 export type Reservation = {

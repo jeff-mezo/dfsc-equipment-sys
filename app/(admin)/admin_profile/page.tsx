@@ -36,6 +36,7 @@ const admin_profile = () => {
             <div className="flex flex-col items-center justify-center mt-8">
                 <Link href="/admin_incident"><Button className="px-10 w-60 up-primary-red">Manage Incidents</Button></Link>                   
                 <Link href="/admin"><Button className="px-10 w-60 mt-4 up-primary-red">Update Inventory and Users</Button></Link>
+                <Link href="/viewPDF"><Button className="px-10 w-60 mt-4 up-primary-red">View Documents and Files</Button></Link>
             </div>
         </div>
 
