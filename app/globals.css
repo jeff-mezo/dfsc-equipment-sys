@@ -99,3 +99,16 @@
     color: #9B151E;
   }
 
+  .tooltipBox[data-theme~='light-border'] {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    color: #333;
+    font-size: 0.9rem;
+    padding: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tooltipBox strong {
+    color: #555;
+  }
+  
