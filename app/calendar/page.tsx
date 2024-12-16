@@ -1,7 +1,8 @@
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 /*
-DEC 14 2024 PATCH NOTES:
-- Calendar now works
+DEC 17 2024
+- Calendar reworked
+- Added css styling for tippy for calendar but not used (dont know how frontend globals.css works)
 
 - Previous updates dev: KanadeTachie (King Behimino)
 - Current updates dev: KanadeTachie (King Behimino)
@@ -10,7 +11,8 @@ DEC 14 2024 PATCH NOTES:
 */ 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 'use client';
-
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css'; // Default Tippy styles
 import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -43,18 +45,48 @@ export default function Calendar() {
           right: 'dayGridMonth,timeGridWeek,timeGridDay',
         }}
         initialView="dayGridMonth"
-        events={events} // Pass events to calendar
+        events={events}
         eventTimeFormat={{
-          hour: '2-digit',
-          minute: '2-digit',
-          meridiem: true,
+        hour: '2-digit',
+        minute: '2-digit',
+        meridiem: true,
         }}
         nowIndicator={true}
-        eventColor='maroon'
+        eventColor="maroon"
+        eventOverlap
         eventClick={(info) => {
-          alert(`Item Reserved: ${info.event.title}`);
+          const { title, extendedProps } = info.event;
+          alert(`
+            Item Reserved: ${title}
+            Borrower Name: ${extendedProps.borrowerName|| ''}
+            Degree Program: ${extendedProps.degprog || ' '}
+            Email: ${extendedProps.email || ' '}
+            Borrow Date and Time: ${extendedProps.borrowDate || ' '}
+            Return Date and Time: ${extendedProps.returnDate || ' '}
+            Admin Privilege: ${extendedProps.isAdmin|| ' '}
+
+          `);
+        }}
+        eventDidMount={(info) => {
+          const { borrowerName, email, degprog, isAdmin, borrowDate, returnDate, eq} = info.event.extendedProps;
+      
+          tippy(info.el, {
+            content: `
+              <strong>Equipment: </strong> ${eq}<br>
+              <strong>Borrower:</strong> ${borrowerName}<br>
+              <strong>Program:</strong> ${degprog}<br>
+              <strong>Email:</strong> ${email}<br>
+              <strong>Borrow date and Time: </strong> ${borrowDate}<br>
+              <strong>Return date and Time: </strong> ${returnDate}<br>
+              <strong>Admin Privilege:</strong> ${isAdmin}
+            `,
+            allowHTML: true, // Enable HTML for rich tooltips
+            theme: 'light-border',
+          });
         }}
       />
     </div>
   );
+  
 }
+
