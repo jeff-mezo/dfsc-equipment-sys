@@ -19,8 +19,8 @@ import {
     DialogTrigger,
   } from "@/components/ui/dialog"
 import { CirclePlus } from 'lucide-react'
-import { EquipmentDataTable } from '@/app/admin/components/equipments/equipment-data-table'
-import { ProfilesDataTable } from '@/app/admin/components/equipments/profiles-data-table'
+import { EquipmentDataTable } from '@/app/(admin)/admin/components/equipments/equipment-data-table'
+import { ProfilesDataTable } from '@/app/(admin)/admin/components/equipments/profiles-data-table'
 import { Profiles, eq_columns, profiles_columns } from "./components/equipments/equipment-columns"
 import { fetchProfiles } from '@/utils/actions'
 import { supabase } from '@/config/supabaseClient'

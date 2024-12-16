@@ -8,7 +8,7 @@ import { deleteEquipment, verifyUser } from "../../actions/index";
 import { Router } from "next/router";
 import { profile } from "console";
 import { toast } from "@/components/ui/use-toast";
-import { CartItem } from "@/app/equipmentpage/cartContext";
+import { CartItem } from "@/app/(user)/equipmentpage/cartContext";
 import { getCoreRowModel, createTable } from '@tanstack/react-table';
 import useUser from "@/app/hook/useUser";
 import { useQueryClient } from "@tanstack/react-query";

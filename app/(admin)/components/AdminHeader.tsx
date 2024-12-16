@@ -31,18 +31,24 @@ const Header = () => {
     }
 
   return (
-    <header className="z-50 sticky top-0 flex items-center justify-between h-16 w-screen px-4 md:px-6 bg-white dark:bg-gray-950 shadow">
-        <Link className="flex items-center gap-2" href="/equipmentpage">
+    <header className="z-50 sticky top-0 flex items-center justify-between h-16 px-4 md:px-6 bg-white dark:bg-gray-950 shadow">
+        <Link className="flex items-center gap-2" href="/admin">
             <Image src={UpLogo} alt="UpLogo"
                 className="w-12"/>
             <h1>DFSC Equipment Reservation System</h1>  
         </Link>
         <div className='flex flex-row'>
+        <Link href="/admin_incident" className='mx-2'>
+                <Button className="hover:underline underline-offset-4 my-auto" size="sm">Incidents</Button>
+            </Link>
+        <Link href="/admin_eqreservation" className='mx-2'>
+                <Button className="hover:underline underline-offset-4 my-auto" size="sm">Reservations</Button>
+            </Link>
             <Link href="/calendar" className='mx-2'>
                 <Button className="bg-[#9B151E] hover:bg-[#9B151E]/90 text-white " size="sm">Calendar</Button>
             </Link>
             <nav className="hidden md:flex gap-6 text-sm font-medium ">
-                {data?.id ? <Link className="hover:underline underline-offset-4 my-auto" href="/profile">
+                {data?.id ? <Link className="hover:underline underline-offset-4 my-auto" href="/admin_profile">
                     {data.email}
                 </Link> : <></>}
                 

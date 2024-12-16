@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useContext } from "react";
-import CartContext from "@/app/equipmentpage/cartContext";
+import CartContext from "@/app/(user)/equipmentpage/cartContext";
 import Link from "next/link";
-import CartItem from "@/app/equipmentpage/cartContext"
+import CartItem from "@/app/(user)/equipmentpage/cartContext"
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 

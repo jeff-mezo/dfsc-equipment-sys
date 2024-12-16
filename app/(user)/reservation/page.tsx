@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import useUser from '@/app/hook/useUser'
 import { useQueryClient } from '@tanstack/react-query'
 import { ClipboardCheckIcon, ClipboardX, Trash } from 'lucide-react'
-import CartContext, { CartItem, Cart } from "@/app/equipmentpage/cartContext";
+import CartContext, { CartItem, Cart } from "@/app/(user)/equipmentpage/cartContext";
 import { supabase } from '@/config/supabaseClient'
 import { useRouter } from 'next/navigation'
 

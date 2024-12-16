@@ -272,7 +272,7 @@ export default function EquipmentReservation() {
   
 
   return (
-    <div className="container mx-auto py-20">
+    <div className="container mx-auto">
       <h1 className="text-2xl font-bold mb-6">Equipment Reservations</h1>
       <div className="max-w-3xl mx-auto">
         <Card>

@@ -5,7 +5,7 @@ import { ReservationCard } from "./components/reservation-card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/config/supabaseClient";
-import useUser from "../hook/useUser";
+import useUser from "@/app/hook/useUser";
 
 // Updated Reservation type with string-based status
 type Reservation = {

@@ -201,7 +201,7 @@ const Dashboard = () => {
           <div className='flex flex-row'>
           <Link href="/reservation">
             <Button variant='outline' id='viewCart' className='bg-[#9B151E] hover:bg-[#9B151E]/90 hover:text-white text-white '>
-              <ShoppingCart className="mr-2 h- w-4" /> View Cart ({cart?.cartItems?.length || 0})
+              <ShoppingCart className="mr-2 h- w-4" /> View equipments ({cart?.cartItems?.length || 0})
             </Button>
           </Link>
 
