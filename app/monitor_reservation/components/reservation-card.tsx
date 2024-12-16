@@ -2,12 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CalendarIcon, UserIcon, BookIcon, PackageIcon } from 'lucide-react'
 
-// Data type imports
-// Define data types for reservations, profiles, and cart items
+// Updated Reservation type with string-based status
 type Reservation = {
   id: number
   name: string
-  status: boolean | null // true = accepted, false = rejected, null = pending
+  status: 'accepted' | 'pending' | 'denied'
   adviser: string
   borrower_id: string
   created_at: string
@@ -28,7 +27,6 @@ type Cart = {
   reservation_id: number
 }
 
-
 export function ReservationCard({
   reservation,
   cartItems,
@@ -46,17 +44,17 @@ export function ReservationCard({
         </CardTitle>
         <Badge
           variant={
-            reservation.status === true
+            reservation.status === 'accepted'
               ? "default"
-              : reservation.status === false
+              : reservation.status === 'denied'
               ? "destructive"
               : "secondary"
           }
         >
-          {reservation.status === true
+          {reservation.status === 'accepted'
             ? "Accepted"
-            : reservation.status === false
-            ? "Rejected"
+            : reservation.status === 'denied'
+            ? "Denied"
             : "Pending"}
         </Badge>
       </CardHeader>

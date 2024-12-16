@@ -5,13 +5,13 @@ import { ReservationCard } from "./components/reservation-card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/config/supabaseClient";
-import useUser from "../hook/useUser"; // Import the useUser hook
+import useUser from "@/app/hook/useUser";
 
-// Define data types for reservations, profiles, and cart items
+// Updated Reservation type with string-based status
 type Reservation = {
   id: number;
   name: string;
-  status: boolean | null; // true = accepted, false = rejected, null = pending
+  status: 'accepted' | 'pending' | 'denied';
   adviser: string;
   borrower_id: string;
   created_at: string;
@@ -37,7 +37,7 @@ export default function Dashboard() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [profiles, setProfiles] = useState<Profiles[]>([]);
   const [carts, setCarts] = useState<Cart[]>([]);
-  const [filter, setFilter] = useState<'all' | 'accepted' | 'pending' | 'rejected'>('all');
+  const [filter, setFilter] = useState<'all' | 'accepted' | 'pending' | 'denied'>('all');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -71,9 +71,9 @@ export default function Dashboard() {
         setCarts(cartData as Cart[]);
       } catch (err) {
         if (err instanceof Error) {
-          setError(err.message); // Use the error message if available
+          setError(err.message);
         } else {
-          setError("An unknown error occurred."); // Fallback error message
+          setError("An unknown error occurred.");
         }
       } finally {
         setLoading(false);
@@ -83,15 +83,15 @@ export default function Dashboard() {
     fetchData();
   }, [user?.id]);
 
-  // Filter reservations by status
+  // Updated filter logic with string-based status
   const filteredReservations = reservations.filter((reservation) =>
     filter === 'all'
       ? true
       : filter === 'accepted'
-      ? reservation.status === true
+      ? reservation.status === 'accepted'
       : filter === 'pending'
-      ? reservation.status === null
-      : reservation.status === false
+      ? reservation.status === 'pending'
+      : reservation.status === 'denied'
   );
 
   // Helper function to retrieve borrower name
@@ -100,7 +100,7 @@ export default function Dashboard() {
 
   // Handle loading and error states
   if (userLoading || loading) return <div>Loading...</div>;
-  if (userError || error) return <div>Error: {userError?.message || error}</div>; //CHANGE RANI KAPOY NAKO HAHSAHA
+  // if (userError || error) return <div>Error: {userError?.message || error}</div>;
   if (!user?.id) return <div>Please log in to view your reservations.</div>;
 
   return (
@@ -129,15 +129,15 @@ export default function Dashboard() {
             Pending
           </Button>
           <Button
-            variant={filter === 'rejected' ? 'default' : 'outline'}
-            onClick={() => setFilter('rejected')}
+            variant={filter === 'denied' ? 'default' : 'outline'}
+            onClick={() => setFilter('denied')}
           >
-            Rejected
+            Denied
           </Button>
         </div>
 
         {/* Dropdown filter */}
-        <Select onValueChange={(value: 'all' | 'accepted' | 'pending' | 'rejected') => setFilter(value)}>
+        <Select onValueChange={(value: 'all' | 'accepted' | 'pending' | 'denied') => setFilter(value)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
@@ -145,7 +145,7 @@ export default function Dashboard() {
             <SelectItem value="all">All</SelectItem>
             <SelectItem value="accepted">Accepted</SelectItem>
             <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="rejected">Rejected</SelectItem>
+            <SelectItem value="denied">Denied</SelectItem>
           </SelectContent>
         </Select>
       </div>
