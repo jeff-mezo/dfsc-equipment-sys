@@ -35,6 +35,10 @@ const Reservation: React.FC = () => {
   // CART DATA
   const { addItemToCart, deleteItemFromCart, cart, clearCart } = useContext(CartContext);
 
+  // PRE-REQUISITE DATA
+  const [isForm5Submitted, setIsForm5Submitted] = useState(false);
+  const [isAttendanceFormSubmitted, setIsAttendanceFormSubmitted] = useState(false);
+
   const increaseQty = (cartItem: CartItem) => {
     const newQty = cartItem?.quantity + 1;
     const item = { ...cartItem, quantity: newQty };
@@ -74,6 +78,8 @@ const Reservation: React.FC = () => {
         setStudNo((data?.email) ? data.email : '-');
         setProject((data?.organization) ? data.organization : '-');
         setDegree((data?.degprog) ? data.degprog : '');
+        setIsAttendanceFormSubmitted((data?.prereq_Attendance) ? true : false);
+        setIsForm5Submitted((data?.prereq_Form5) ? true : false);
     } else if(error) {
         setError(error);
     }
@@ -472,15 +478,55 @@ const Reservation: React.FC = () => {
 
 
             <div className="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:flex sm:items-center sm:justify-between sm:px-6">
+              {/* Form5 Status */}
               <div className="flex items-center">
-                <ClipboardCheckIcon className="h-5 w-5 text-green-500" />
-                <span className="ml-2 text-sm font-medium text-green-500">Certified to Use</span>
+                {isForm5Submitted ? (
+                  <>
+                    <ClipboardCheckIcon className="h-5 w-5 text-green-500" />
+                    <span className="ml-2 text-sm font-medium text-green-500">Form5 Submitted</span>
+                  </>
+                ) : (
+                  <>
+                    <ClipboardX className="h-5 w-5 text-red-500" />
+                    <span className="ml-2 text-sm font-medium text-red-500">Form5 Missing</span>
+                  </>
+                )}
               </div>
+              {/* Attendance Form Status */}
               <div className="flex items-center">
-                <ClipboardX className="h-5 w-5 text-red-500" />
-                <span className="ml-2 text-sm font-medium text-red-500">Permit to Use</span>
+                {isAttendanceFormSubmitted ? (
+                  <>
+                    <ClipboardCheckIcon className="h-5 w-5 text-green-500" />
+                    <span className="ml-2 text-sm font-medium text-green-500">Attendance Form Submitted</span>
+                  </>
+                ) : (
+                  <>
+                    <ClipboardX className="h-5 w-5 text-red-500" />
+                    <span className="ml-2 text-sm font-medium text-red-500">Attendance Form Missing</span>
+                  </>
+                )}
               </div>
-              <Button className="mt-4 sm:mt-0 bg-[#9B151E]" onClick={handleSubmit}>Complete Checkout</Button>
+              {/* <Button className="mt-4 sm:mt-0 bg-[#9B151E]" onClick={handleSubmit}>Complete Checkout</Button>
+             */}
+              {/* Complete Checkout Button */}
+              <div className="flex mt-4 sm:mt-0">
+                {/* Warning Message */}
+                {(!isForm5Submitted || !isAttendanceFormSubmitted) && (
+                  <p className="my-auto mr-2 text-xs text-red-500 ">
+                    Please submit all required forms to enable checkout.
+                  </p>
+                )}
+                <Button
+                  className={`bg-[#9B151E] ${isForm5Submitted && isAttendanceFormSubmitted ? '' : 'opacity-50 cursor-not-allowed'}`}
+                  onClick={handleSubmit}
+                  disabled={!isForm5Submitted || !isAttendanceFormSubmitted}
+                >
+                  Complete Checkout
+                </Button>
+
+                
+              </div>
+
             </div>
           </div>
         </div>
