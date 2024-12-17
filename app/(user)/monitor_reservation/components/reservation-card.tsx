@@ -27,6 +27,20 @@ type Cart = {
   reservation_id: number
 }
 
+// Utility function to format date and time using Intl.DateTimeFormat
+const formatDateTime = (dateTime: string): string => {
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  return formatter.format(new Date(dateTime));
+};
+
 export function ReservationCard({
   reservation,
   cartItems,
@@ -82,8 +96,13 @@ export function ReservationCard({
           <ul className="space-y-1">
             {cartItems.map((item) => (
               <li key={item.id} className="text-sm">
-                {item.eqname} (Qty: {item.quantity}) - {item.borrow_date} to {item.return_date}
-              </li>
+              {item.eqname} (Qty: {item.quantity}) -{" "}
+              <span>
+                {formatDateTime(item.borrow_date)}{" "}
+                <span className="font-semibold">to</span>{" "}
+                {formatDateTime(item.return_date)}
+              </span>
+            </li>
             ))}
           </ul>
         </div>
