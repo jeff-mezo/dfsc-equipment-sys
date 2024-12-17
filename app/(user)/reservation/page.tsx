@@ -169,6 +169,22 @@ const Reservation: React.FC = () => {
       });
       return;
     }
+
+
+  // Convert dates to comparable Date objects
+  const borrowDateTime = new Date(borrowDate);
+  const returnDateTime = new Date(returnDate);
+
+  // Validate return date is after or equal to borrow date
+  if (returnDateTime < borrowDateTime) {
+    toast({
+      title: "Invalid Return Date",
+      description: "Return Date cannot be earlier than the Borrow Date.",
+      variant: "destructive",
+      duration: 5000,
+    });
+    return;
+  }
   
 
     try {
