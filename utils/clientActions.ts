@@ -163,6 +163,34 @@ export async function checkFileExists (userID: string, location: string){
   return userFiles;
 }
 
+export async function handleFileUpload_Incident(file: File, userID: string): Promise<string | null> {
+  if (userID) {
+    try {
+      const existingFiles = await checkFileExists(userID, 'Incident');
+      let fileIndex = existingFiles?.length || 0;
+
+      // Generate the new filename
+      const newFilename = `${userID}_Incident_${fileIndex + 1}.pdf`;
+      const fileRenamed = new File([file], newFilename, { type: file.type });
+
+      const { data, error } = await supabase.storage
+        .from('Incident')
+        .upload(newFilename, fileRenamed);
+        if (error) {
+          console.error('Upload error (Incident):', error);
+          return null;
+        } else {
+          console.log('Upload successful (Incident):', data);
+          return newFilename; // Return the new filename
+        }
+      } catch (error) {
+        console.error('Error handling file upload', error);
+        return null;
+      }
+      } else {
+        alert('You are not logged in! Please log in first before uploading files.');
+        return null;
+    }}
 
 //----------function for fetching pdf url function-----------//
 //search in multiple buckets
