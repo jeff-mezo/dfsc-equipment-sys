@@ -2,7 +2,7 @@
     "redirects": [
       {
         "source": "/",
-        "destination": "app/(account_auth)/login/page.tsx",
+        "destination": "/login",
         "permanent": true
       }
     ]
