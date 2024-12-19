@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import Header from "@/components/navbar"
+import Header from '@/app/(user)/components/UserNavbar';
 import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
 import { login, signup } from '../../../utils/actions'
 import { createClient } from '@/utils/supabase/client'
@@ -45,7 +45,7 @@ const Login = () => {
               Forgot Password
             </Link>
           </div>
-          <Button className="w-full up-primary-red" formAction={login}>Login</Button>
+          <Button className="w-full up-primary-red" onClick={login}>Login</Button>
           <Button className="w-full" variant={'outline'} onClick= {signInWithGoogle}>
             <ChromeIcon className="mr-2 h-4 w-4" />
             Signin with Google
