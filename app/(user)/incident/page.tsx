@@ -40,7 +40,10 @@ import { handleFileUpload_Incident } from '@/utils/clientActions'
 import useUser from '@/app/hook/useUser';
 
 var isValidFileType = false;
-const incident = () => {
+const Incident = () => {
+  const { isFetching, data } = useUser();
+  const [userID, setUserId] = useState<string | null>(null);
+  const [isValidFileType, setIsValidFileType] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     studentnum: '',
@@ -53,136 +56,105 @@ const incident = () => {
     description: '',
     adviser: '',
     incidentReportFilename: ''
-});
+  });
 
-const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  const { name, value } = e.target;
-
-  const lettersFields = ['name', 'degreeProg', 'eq_name', 'adviser'];
-  const charactersRegex = /^[A-Za-z\s\-./]*$/;
-
-  const studentNumberRegex = /^[0-9\-]*$/; 
-
-  // Validation logic
-  if (lettersFields.includes(name)) {
-    if (!charactersRegex.test(value)) {
-      return; // Ignore invalid input
+  useEffect(() => {
+    if (data?.id) {
+      setUserId(data.id);
     }
-  } else if (name === 'studentnum') {
-    if (!studentNumberRegex.test(value)) {
-      return; // Ignore invalid input
+  }, [data]);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    const lettersFields = ['name', 'degreeProg', 'eq_name', 'adviser'];
+    const charactersRegex = /^[A-Za-z\s\-./]*$/;
+    const studentNumberRegex = /^[0-9\-]*$/;
+
+    if (lettersFields.includes(name) && !charactersRegex.test(value)) {
+      return;
     }
-  }
-
-  // Update formData state
-  setFormData((prevData) => ({
-    ...prevData,
-    [name]: value,
-  }));
-};
-
-const [userID, setUserId] = useState<string | null>(null)
-const { isFetching, data } = useUser();
-
-//fetching userid of current user login. UID parsed to string and passed as filename for pdf
-useEffect(() => {
-  if (data && data.id) {
-    setUserId(data.id);
-  }
-}, [data]);
-
-const handleFileChange = async (
-  event: React.ChangeEvent<HTMLInputElement>,
-  uploadHandler: (file: File, userID: string) => Promise<string | null>
-) => {
-  const file = event.target.files?.[0];
-
-  // No file selected
-  if (!file) return;
-
-  // User not logged in
-  if (!userID) {
-    alert('You are not logged in! Please log in first before uploading files.');
-    return;
-  }
-
-  // Check file type
-  if (file.type !== 'application/pdf') {
-    alert('Please upload only PDF files.');
-    return;
-  }
-
-  try {
-    // Upload file and get the filename
-    const newFilename = await uploadHandler(file, userID);
-
-    if (newFilename) {
-      setFormData((prevData) => ({
-        ...prevData,
-        incidentReportFilename: newFilename, // Update form data with the filename
-      }));
-      isValidFileType = true;
+    if (name === 'studentnum' && !studentNumberRegex.test(value)) {
+      return;
     }
-  } catch (error) {
-    console.error('File Upload Failed:', error);
+
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    uploadHandler: (file: File, userID: string) => Promise<string | null>
+  ) => {
+    const file = event.target.files?.[0];
+    
+    if (!file) return;
+    if (!userID) {
+      alert('You are not logged in! Please log in first before uploading files.');
+      return;
+    }
+    if (file.type !== 'application/pdf') {
+      alert('Please upload only PDF files.');
+      return;
+    }
+
+    try {
+      const newFilename = await uploadHandler(file, userID);
+      if (newFilename) {
+        setFormData(prev => ({
+          ...prev,
+          incidentReportFilename: newFilename,
+        }));
+        setIsValidFileType(true);
+      }
+    } catch (error) {
+      console.error('File Upload Failed:', error);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    if (!isValidFileType) {
+      alert('Please upload a valid PDF file.');
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('incidentform')
+        .insert([{ ...formData }]);
+
+      if (error) throw error;
+
+      alert('Incident report submitted successfully');
+      setFormData({
+        name: '',
+        studentnum: '',
+        degreeProg: '',
+        email: '',
+        eq_name: '',
+        eq_code: '',
+        date_incident: '',
+        time_incident: '',
+        description: '',
+        adviser: '',
+        incidentReportFilename: '',
+      });
+      setIsValidFileType(false);
+    } catch (error) {
+      console.error('Error inserting data:', error);
+    }
+  };
+
+  if (isFetching) {
+    return <div>Loading...</div>;
   }
-};
-
-
-
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(formData.email)) {
-    alert('Please enter a valid email address.');
-    return;
-  }
-
-  if (!isValidFileType) {
-    alert('Please upload a valid PDF file.');
-    return;
-  }
-
-  const { error } = await supabase
-    .from('incidentform')
-    .insert([{ ...formData }]);
-
-  if (error) {
-    console.error('Error inserting data:', error);
-  } else {
-    alert('Incident report submitted successfully');
-    setFormData({
-      name: '',
-      studentnum: '',
-      degreeProg: '',
-      email: '',
-      eq_name: '',
-      eq_code: '',
-      date_incident: '',
-      time_incident: '',
-      description: '',
-      adviser: '',
-      incidentReportFilename: '',
-        // .insert([{
-        //     name: formData.name,
-        //     studentnum: formData.studentnum,
-        //     degreeProg: formData.degreeProg,
-        //     email: formData.email,
-        //     eq_name: formData.eq_name,
-        //     eq_code: formData.eq_code,
-        //     date_incident: formData.date_incident,
-        //     time_incident: formData.time_incident,
-        //     description: formData.description,
-        //     adviser: formData.adviser,
-        //     proofIncident: null, // Set proofIncident to null
-        //     incidentReportFilename: formData.incidentReportFileName
-        // }]);
-    });
-  }
-};
-
-
+  
     return ( 
         <div className="overflow-x-hidden max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 ">
             <div className="space-y-8 pt-10">
@@ -366,4 +338,4 @@ const handleSubmit = async (e: React.FormEvent) => {
     )
   }
  
-export default incident;
+export default Incident;

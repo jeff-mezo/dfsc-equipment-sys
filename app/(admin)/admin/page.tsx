@@ -42,7 +42,7 @@ type Props = {
 
 
 
-const UserVerification = async () => {
+export default async function UserVerification () {
     const { data: equipmentData, error: equipmentError } = await supabase.from('equipments').select('*');
     const { data: profileData, error: profileError } = await supabase.from('profiles').select('*');
 
@@ -149,5 +149,3 @@ const UserVerification = async () => {
     
 }
 
-
-export default UserVerification;

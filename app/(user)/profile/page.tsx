@@ -47,14 +47,8 @@ type ProfileFormState = {
     success: boolean
 }
 
-
-
-const profile = () => {
-    const { isFetching, data } = useUser();
-    const queryClient = useQueryClient();
-
-    console.log(data?.name)
-    // ============ PROFILE UPDATE: ================
+const Profile = () => {
+    const { data, error } = useUser();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [contactNum, setContactNum] = useState('');
@@ -65,34 +59,26 @@ const profile = () => {
     const [educ, setEduc] = useState('');
     const [researchOrg, setResearchOrg] = useState('');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    
-    useEffect(() => {
-        if(data) {
-            // if (!data) throw new Error('No user logged in');
-            // if (error) throw error;
-            console.log('setting...')
-            setName((data?.name) ? data.name : '-');
-            setEmail((data?.email) ? data.email : '');
-            setContactNum((data?.contactno) ? data.contactno : '-');
-            setAge((data?.age) ? data.age : '');
-            setJobTitle((data?.jobtitle) ? data.jobtitle : 'faculty');
-            setDegree((data?.degprog) ? data.degprog : '');
-            setSex((data?.sex) ? data.sex : '');
-            setEduc((data?.education) ? data.education : '');
-            setResearchOrg((data?.organization) ? data.organization : '');
-        } else if(error) {
-            setError(error);
-        }
-    }, [data]);
 
+    useEffect(() => {
+        if (data) {
+            setName(data.name || '-');
+            setEmail(data.email || '');
+            setContactNum(data.contactno || '-');
+            setAge(data.age || '');
+            setJobTitle(data.jobtitle || 'faculty');
+            setDegree(data.degprog || '');
+            setSex(data.sex || '');
+            setEduc(data.education || '');
+            setResearchOrg(data.organization || '');
+        } else if (error) {
+            console.error(error);
+        }
+    }, [data, error]);
 
     const handleSubmit = async () => {
-        console.log("submitting...")
-
         const update = {
-            //   id: string
             name,
             email,
             contactno: contactNum,
@@ -104,12 +90,11 @@ const profile = () => {
             organization: researchOrg,
             updated_at: new Date(),
         }
-    
+
         const result = await updateProfile(data?.id, update);
         const { error, data: todo } = JSON.parse(result);
 
         if (error?.message) {
-            console.log(error.message)
             toast({
                 variant: "destructive",
                 title: "Fail to update profile",
@@ -135,98 +120,63 @@ const profile = () => {
         setIsDialogOpen(false);
     }
 
-    // const handleUpdateProfile = async () => {
-    //     setLoading(true);
-    //     setError(null);
-    
-    //     try {
-    //       const user = supabase.auth.user();
-    //       if (!user) throw new Error('No user logged in');
-    
-    //       const updates = {
-    //         name,
-    //         email,
-    //         full_name: fullName,
-    //         avatar_url: avatarUrl,
-    //         role, // Include the selected role
-    //         updated_at: new Date(), // you might want to track when the profile was updated
-    //       };
-    
-    //       const { data, error } = await supabase
-    //         .from('profiles')
-    //         .update(updates)
-    //         .eq('id', user.id);
-    
-    //       if (error) throw error;
-    //       alert('Profile updated successfully');
-    //     } catch (error: any) {
-    //       setError(error.message);
-    //     } finally {
-    //       setLoading(false);
-    //     }
-    //   };
-
-
-
     return (
         <div className="bg-gray-100 min-h-screen flex flex-col sm:flex-row justify-center items-center gap-8">
             <div className="bg-white p-8 rounded-lg shadow-md w-96 flex flex-col">
                 <div className="flex flex-col items-center">
                     <Avatar className="w-24 h-24 rounded-full mx-auto mb-2">
-                        <AvatarImage src={(data?.profileimg) ? data?.profileimg : "https://hwchamber.co.uk/wp-content/uploads/2022/04/avatar-placeholder.gif"}/>
+                        <AvatarImage src={data?.profileimg || "https://hwchamber.co.uk/wp-content/uploads/2022/04/avatar-placeholder.gif"} />
                     </Avatar>
-                    <Badge className="mb-4 up-primary-red">{(data?.isVerified) ? "Unverified" : "Verified" }</Badge>
+                    <Badge className="mb-4 up-primary-red">{data?.isVerified ? "Verified" : "Unverified"}</Badge>
                 </div>
                 <div className="text-center mt-4">
-                    <h1 className="text-l font-semibold">{(data?.name) ? data.name : "-"}</h1>
+                    <h1 className="text-l font-semibold">{data?.name || "-"}</h1>
                     <p className="text-gray-600 text-sm">Name</p>
-                    <p className="text-l font-semibold mt-4">{(data?.email) ? data.email : "-"}</p>
+                    <p className="text-l font-semibold mt-4">{data?.email || "-"}</p>
                     <p className="text-gray-600 text-sm">Email</p>
-                    <p className="font-semibold mt-4">{(data?.contactno) ? data.contactno : "-"}</p>
+                    <p className="font-semibold mt-4">{data?.contactno || "-"}</p>
                     <p className="text-gray-600 text-sm">Contact Number</p>
                 </div>
                 <div className="flex flex-col items-center justify-center mt-8">
-                    
-                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                            <DialogTrigger asChild>
-                                <Button className="px-12 w-60 up-primary-red">Update Information</Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-[425px]">
-                                <DialogHeader>
-                                    <DialogTitle>Edit profile</DialogTitle>
-                                    <DialogDescription>
-                                        Make changes to your profile here. Click save when you&apos;re done.
-                                    </DialogDescription>
-                                </DialogHeader>
-
-                                <form 
-                                    onSubmit={(e) => {
-                                        console.log("update initialization..")
-                                        e.preventDefault();
-                                        handleSubmit();
-                                    }}
-                                >
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DialogTrigger asChild>
+                            <Button className="px-12 w-60 up-primary-red">Update Information</Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>Edit profile</DialogTitle>
+                                <DialogDescription>
+                                    Make changes to your profile here. Click save when you&apos;re done.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <form 
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    handleSubmit();
+                                }}
+                            >
                                 <div className="grid gap-4 py-4">
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="name" className="text-right">
-                                        Name
+                                            Name
                                         </Label>
-                                        <Input id="" className="col-span-3 border-black" 
+                                        <Input id="name" className="col-span-3 border-black" 
                                             name="name"
                                             type="text"
                                             value={name}
-                                            onChange={(e) => { const regex = /^[a-zA-Z.\- ]*$/; 
-                                            if (regex.test(e.target.value)) {
-                                                setName(e.target.value); 
-                                            }
-                                        }}
+                                            onChange={(e) => { 
+                                                const regex = /^[a-zA-Z.\- ]*$/; 
+                                                if (regex.test(e.target.value)) {
+                                                    setName(e.target.value); 
+                                                }
+                                            }}
                                         />
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
-                                        Email
+                                            Email
                                         </Label>
-                                        <Input id="" className="col-span-3 border-black" 
+                                        <Input id="email" className="col-span-3 border-black" 
                                             name="email"
                                             type="text"
                                             value={email}
@@ -235,9 +185,9 @@ const profile = () => {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="contact" className="text-right">
-                                        Contact Number
+                                            Contact Number
                                         </Label>
-                                        <Input id="" className="col-span-3 border-black" 
+                                        <Input id="contact" className="col-span-3 border-black" 
                                             name="contactNum"
                                             type="text"
                                             value={contactNum}
@@ -251,9 +201,9 @@ const profile = () => {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="age" className="text-right">
-                                        Age
+                                            Age
                                         </Label>
-                                        <Input id="" type="text" className="col-span-3 border-black"
+                                        <Input id="age" type="text" className="col-span-3 border-black"
                                             name="age"
                                             value={age}
                                             onChange={(e) => {
@@ -266,14 +216,14 @@ const profile = () => {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="job" className="text-right">
-                                        Job Title
+                                            Job Title
                                         </Label>
                                         <Select
                                             name="jobTitle"
                                             value={jobTitle}
-                                            onValueChange={(e) => { setJobTitle(e); console.log("job: ", jobTitle, "e: ", e)} }
+                                            onValueChange={(e) => setJobTitle(e)}
                                         >
-                                            <SelectTrigger className="w-full col-span-3  border-black">
+                                            <SelectTrigger className="w-full col-span-3 border-black">
                                                 <SelectValue placeholder="-" aria-label={jobTitle}> 
                                                     {jobTitle}
                                                 </SelectValue>
@@ -287,14 +237,14 @@ const profile = () => {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="course" className="text-right">
-                                        Degree Program
+                                            Degree Program
                                         </Label>
                                         <Select
                                             name="degree"
                                             value={degree}
                                             onValueChange={(e) => setDegree(e)}
                                         >
-                                            <SelectTrigger className="w-full col-span-3  border-black">
+                                            <SelectTrigger className="w-full col-span-3 border-black">
                                                 <SelectValue placeholder="-" aria-label={degree}> 
                                                     {degree}
                                                 </SelectValue>
@@ -308,14 +258,14 @@ const profile = () => {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="sex" className="text-right">
-                                        Sex
+                                            Sex
                                         </Label>
                                         <Select
                                             name="sex"
                                             value={sex}
                                             onValueChange={(e) => setSex(e)}
                                         >
-                                            <SelectTrigger className="w-full col-span-3  border-black">
+                                            <SelectTrigger className="w-full col-span-3 border-black">
                                                 <SelectValue placeholder="-" aria-label={sex}> 
                                                     {sex}
                                                 </SelectValue>
@@ -330,14 +280,14 @@ const profile = () => {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="education" className="text-right">
-                                        Education
+                                            Education
                                         </Label>
                                         <Select
                                             name="education"
                                             value={educ}
                                             onValueChange={(e) => setEduc(e)}
                                         >
-                                            <SelectTrigger className="w-full col-span-3  border-black">
+                                            <SelectTrigger className="w-full col-span-3 border-black">
                                                 <SelectValue placeholder="-" aria-label={educ}> 
                                                     {educ}
                                                 </SelectValue>
@@ -350,14 +300,14 @@ const profile = () => {
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="education" className="text-right">
-                                        Research Organization
+                                            Research Organization
                                         </Label>
                                         <Select
                                             name="researchOrg"
                                             value={researchOrg}
                                             onValueChange={(e) => setResearchOrg(e)}
                                         >
-                                            <SelectTrigger className="w-full col-span-3  border-black">
+                                            <SelectTrigger className="w-full col-span-3 border-black">
                                                 <SelectValue placeholder="-" aria-label={researchOrg}> 
                                                     {researchOrg}
                                                 </SelectValue>
@@ -372,9 +322,9 @@ const profile = () => {
                                 <DialogFooter>
                                     <Button className="up-primary-red" type="submit">Save changes</Button>
                                 </DialogFooter>
-                                </form>
-                            </DialogContent>
-                        </Dialog>
+                            </form>
+                        </DialogContent>
+                    </Dialog>
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button className="px-8 w-60 mt-4 up-primary-red">Reservation Prerequisite</Button>
@@ -398,16 +348,16 @@ const profile = () => {
                 <div className="mt-8 grid grid-cols-2 gapx-10 justify-items-center">
                     <p className="text-l font-semibold">Job Title</p>
                     <p className="text-l font-semibold">Age</p>
-                    <p className="text-gray-600 text-sm">{(data?.jobtitle) ? data.jobtitle : "-"}</p>
-                    <p className="text-gray-600 text-sm">{(data?.age) ? data.age : "-"}</p>
+                    <p className="text-gray-600 text-sm">{data?.jobtitle || "-"}</p>
+                    <p className="text-gray-600 text-sm">{data?.age || "-"}</p>
                     <p className="text-l font-semibold mt-5">Degree Program</p>
                     <p className="text-l font-semibold mt-5">Sex</p>
-                    <p className="text-gray-600 text-sm">{(data?.degprog) ? data.degprog : "-"}</p>
-                    <p className="text-gray-600 text-sm">{(data?.sex) ? data.sex : "-"}</p>
+                    <p className="text-gray-600 text-sm">{data?.degprog || "-"}</p>
+                    <p className="text-gray-600 text-sm">{data?.sex || "-"}</p>
                     <p className="text-l font-semibold mt-5">Education</p>
                     <p className="text-l font-semibold mt-5">Research Organization</p>
-                    <p className="text-gray-600 text-sm">{(data?.education) ? data.education : "-"}</p>
-                    <p className="text-gray-600 text-sm">{(data?.organization) ? data.organization : "-"}</p>
+                    <p className="text-gray-600 text-sm">{data?.education || "-"}</p>
+                    <p className="text-gray-600 text-sm">{data?.organization || "-"}</p>
                 </div>
                 <div className="text-center mt-8">
                     <p className="text-l font-semibold">User ID</p>
@@ -423,4 +373,5 @@ const profile = () => {
         </div>
     );
 };
-export default profile;
+
+export default Profile;
