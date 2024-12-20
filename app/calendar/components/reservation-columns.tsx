@@ -18,6 +18,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useEffect, useState } from "react";
 import { CartItem } from "@/app/(user)/equipmentpage/cartContext";
 import { getCoreRowModel, createTable } from '@tanstack/react-table';
+import { Row } from "@tanstack/react-table";
 
 export type Reservation = {
     status: boolean ;
@@ -28,6 +29,31 @@ export type Reservation = {
     borrow_date: string; //Temporary
     return_date: string; //Temporary
 }
+
+interface EquipmentCellProps {
+  row: Row<Reservation>
+}
+
+const EquipmentCell = ({ row }: EquipmentCellProps) => {
+  const [data, setData] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const reservations = await fetchReservationsWithEquipment();
+      setData(reservations);
+    };
+
+    fetchData();
+  }, []);
+
+  const equipments = data.map((e) => e.name);
+  
+  return (
+    <span>
+      {equipments.join(', ')}
+    </span>
+  );
+};
 
 const fetchReservationsWithEquipment = async (): Promise<CartItem[]> => {
   try {
@@ -57,31 +83,10 @@ export const columns: ColumnDef<Reservation>[] = [
         accessorKey: "email",
         header: "Email",
     },
-    {
+      {
         accessorKey: "eq_name",
         header: "Equipment",
-        cell: ({row}) => {
-          console.log(row.original.borrow_date)
-          const [data, setData] = useState<CartItem[]>([]);
-
-          useEffect(() => {
-            const fetchData = async () => {
-              const reservations = await fetchReservationsWithEquipment();
-              setData(reservations);
-            };
-
-            fetchData();
-          }, []);
-
-          console.log(data)
-
-          const equipments = data.map((e) => {e.name});
-          return (
-            <span>
-              {equipments.join(', ')}
-            </span>
-          );
-        }
+        cell: ({ row }) => <EquipmentCell row={row} />
     },
     {
         accessorKey: "project",

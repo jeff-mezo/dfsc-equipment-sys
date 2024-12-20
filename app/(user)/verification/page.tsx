@@ -38,42 +38,44 @@ import {
   AlertTitle,
 } from "@/components/ui/alert"
 
-const verification = () => {
-  const [userID, setUserId] = useState<string | null>(null)
+const Verification = () => {
   const { isFetching, data } = useUser();
+  const [userID, setUserId] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   //fetching userid of current user login. UID parsed to string and passed as filename for pdf
   useEffect(() => {
-    if (data && data.id) {
+    if (!isFetching && data?.id) {
       setUserId(data.id);
     }
-  }, [data]);
+  }, [data, isFetching]);
   
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>, uploadHandler: (file: File, userID: string) => Promise<void>) => {
     const file = event.target.files?.[0];
-
-    //no file
+    
     if (!file) return;
-
-    //no user login
     if (!userID) {
       alert("You are not logged in! Please log in first before uploading files.");
       return;
     }
-
-    // File type checker
     if (file.type !== "application/pdf") {
       alert("Please upload only PDF files.");
-        return;
-    } else {
-      try {
-        await uploadHandler(file, userID);
-      } catch (error) {
-        console.error("File Upload Failed:", error);
-      }
+      return;
     }
 
+    setIsUploading(true);
+    try {
+      await uploadHandler(file, userID);
+    } catch (error) {
+      console.error("File Upload Failed:", error);
+    } finally {
+      setIsUploading(false);
+    }
   };
+
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
 
   return ( 
     <div className="overflow-x-hidden max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:pt-20">
@@ -157,4 +159,4 @@ const verification = () => {
   );
 }
 
-export default verification;
+export default Verification;

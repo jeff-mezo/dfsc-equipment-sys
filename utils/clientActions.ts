@@ -38,7 +38,7 @@ export async function handleFileUpload_Form5(file: File, userID: string): Promis
     // Check if a Form 5 file already exists
     const existingFiles = await checkFileExists(userID, 'Form_5');
     
-    if (existingFiles?.length > 0) {
+    if (existingFiles && existingFiles.length > 0) {
       // Ask the user if they want to replace the existing file
       const shouldReplace = window.confirm("A Form 5 file already exists. Do you want to replace it?");
       
@@ -88,7 +88,7 @@ export async function handleFileUpload_Attendance(file: File, userID: string): P
     // Check if an Attendance file already exists
     const existingFiles = await checkFileExists(userID, 'Attendance');
     
-    if (existingFiles?.length > 0) {
+    if (existingFiles && existingFiles.length > 0) {
       // Ask the user if they want to replace the existing file
       const shouldReplace = window.confirm("An Attendance file already exists. Do you want to replace it?");
       
@@ -222,7 +222,10 @@ interface Reservation {
   borrow_date: string;
   return_date?: string;
   profiles: {
-  name: string;
+    name: string;
+    email: string;
+    degprog: string;
+    isAdmin: boolean;
   } | null; // profiles might be null
 }
 
@@ -242,7 +245,7 @@ export async function fetchReservations() {
 
   return data.map((reservation) => ({
     id: reservation.id.toString(),
-    title: `${reservation.eqname} (Borrowed by: ${reservation.profiles?.name || 'Unknown'})`,
+    title: `${reservation.eqname} (Borrowed by: ${(reservation.profiles as any)?.name || 'Unknown'})`,
     start: new Date(reservation.borrow_date).toISOString(),
     end: reservation.return_date
       ? new Date(reservation.return_date).toISOString()
@@ -251,10 +254,10 @@ export async function fetchReservations() {
       eq: reservation.eqname,
       borrowDate: reservation.borrow_date,
       returnDate: reservation.return_date,
-      borrowerName: reservation.profiles?.name || 'Unknown',
-      email: reservation.profiles?.email || 'N/A',
-      degprog: reservation.profiles?.degprog || 'N/A',
-      isAdmin: reservation.profiles?.isAdmin ? 'Yes' : 'No',
+      borrowerName: (reservation.profiles as any)?.name || 'Unknown',
+      email: (reservation.profiles as any)?.email || 'N/A',
+      degprog: (reservation.profiles as any)?.degprog || 'N/A',
+      isAdmin: (reservation.profiles as any)?.isAdmin ? 'Yes' : 'No',
     },
   }));
 }
